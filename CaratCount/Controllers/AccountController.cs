@@ -24,9 +24,39 @@ namespace CaratCount.Controllers
         public IActionResult Register()
         {
             ViewBag.PageName = "Register";
-            return View();
+            var model = new RegisterViewModel();
+            return View(model);
         }
 
+        // POST: /account/register
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.UserEmail, PhoneNumber = model.PhoneNumber,GstInNo = model.GstInNo };
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "User");
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+
+            ViewBag.PageName = "Register";
+            TempData["ToastMessage"] = "An error occurred while registering.";
+            TempData["ToastStatus"] = ToastStatus.Danger;
+            return View(model);
+        }
         // GET: /account/login
         [HttpGet]
         [AllowAnonymous]
@@ -61,7 +91,7 @@ namespace CaratCount.Controllers
 
                         if (isAdmin)
                         {
-                            return RedirectToAction("Admin", "Dashboard");
+                            return RedirectToAction("Index", "Admin");
                         }
                         else
                         {
@@ -75,6 +105,25 @@ namespace CaratCount.Controllers
             TempData["ToastMessage"] = "Invalid username/password.";
             TempData["ToastStatus"] = ToastStatus.Danger;
             return View(model);
+        }
+
+
+        // POST: /account/logout
+        [HttpPost]
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        // Get: /account/access-denied
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied(string returnUrl = null)
+        {
+            ViewBag.PageName = "AccessDenied";
+            return View();
         }
     }
 }

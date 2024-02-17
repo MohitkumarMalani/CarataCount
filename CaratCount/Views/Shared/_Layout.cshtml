@@ -9,34 +9,132 @@
     <link rel="stylesheet" href="~/CaratCount.styles.css" asp-append-version="true" />
 </head>
 <body class="@GetBodyClass(ViewBag.PageName ?? string.Empty)">
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CaratCount</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+
+    @if (ViewBag.PageName == "Home" || ViewBag.PageName == "Register" || ViewBag.PageName == "Login" || ViewBag.PageName == "AccessDenied" || ViewBag.PageName == "Admin")
+        {
+            <header>
+                <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                     <div class="container-fluid">
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CaratCount</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        <span class="navbar-toggler-icon"></span>
+                        </button>
+                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+
+                        @using Microsoft.AspNetCore.Identity
+                        @inject SignInManager<ApplicationUser> _signInManager
+
+                        <ul class="navbar-nav flex-grow-1">
+                            @if (_signInManager.IsSignedIn(User))
+                            {
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                                </li>
+                            }
+                        </ul>
+
+                   
+
+                    <ul class="navbar-nav flex-grow-0">
+                        @if (_signInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <form class="form-inline" asp-controller="Account" asp-action="LogOut" method="post">
+                                    <input type="submit" class="nav-link btn btn-outline-danger" value="Logout" />
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-info" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-primary mx-2" asp-controller="Account" asp-action="LogIn">Login</a>
+                            </li>
+                        }
                     </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
 
-    <div class="container">
-        <toast></toast>
+        <div class="container">
+            <toast></toast>
             @RenderBody()
-        
-    </div>
 
+        </div>
+        }
+        else
+        {
+            <div id="wrapper">
+            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-action="Index" asp-controller="Dashboard">
+                    <div class="sidebar-brand-icon rotate-n-15">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="18" width="18" fill="white"><path height="24" width="24" d="M168.5 72L256 165l87.5-93h-175zM383.9 99.1L311.5 176h129L383.9 99.1zm50 124.9H256 78.1L256 420.3 433.9 224zM71.5 176h129L128.1 99.1 71.5 176zm434.3 40.1l-232 256c-4.5 5-11 7.9-17.8 7.9s-13.2-2.9-17.8-7.9l-232-256c-7.7-8.5-8.3-21.2-1.5-30.4l112-152c4.5-6.1 11.7-9.8 19.3-9.8H376c7.6 0 14.8 3.6 19.3 9.8l112 152c6.8 9.2 6.1 21.9-1.5 30.4z" /></svg>
+                    </div>
+                    <div class="sidebar-brand-text mx-2">Carat Count</div>
+                </a>
+                <hr class="sidebar-divider my-0" />
+
+                <li class="nav-item @(ViewBag.PageName == "Dashboard" ? "active" : "")">
+                    <a class="nav-link" asp-action="Index" asp-controller="Dashboard">
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="nav-item @(ViewBag.PageName == "Client" ? "active" : "")">
+                    <a class="nav-link" asp-controller="Client" asp-action="Index">
+                        <span>Client</span>
+                    </a>
+                </li>
+
+                <li class="nav-item @(ViewBag.PageName == "DiamondPacket" ? "active" : "")">
+                    <a class="nav-link" asp-action="Index" asp-controller="DiamondPacket">
+                        <span>Diamond Packet</span>
+                    </a>
+                </li>
+
+                <li class="nav-item @(ViewBag.PageName == "Process" ? "active" : "")">
+                    <a class="nav-link" asp-action="Index" asp-controller="Process">
+                        <span>Process</span>
+                    </a>
+                </li>
+
+                <li class="nav-item @(ViewBag.PageName == "Employee" ? "active" : "")">
+                    <a class="nav-link" asp-action="Index" asp-controller="Employee">
+                        <span>Employee</span>
+                    </a>
+                </li>
+
+                <li class="nav-item @(ViewBag.PageName == "Invoices" ? "active" : "")">
+                    <a class="nav-link" asp-action="Index" asp-controller="Invoices">
+                        <span>Invoices</span>
+                    </a>
+                </li>
+
+                <li class="nav-item @(ViewBag.PageName == "Profile" ? "active" : "")">
+                    <a class="nav-link" asp-action="Index" asp-controller="Profile">
+                        <span>Profile</span>
+                    </a>
+                </li>
+
+            </ul>
+
+            <div class="container">
+                <toast></toast>
+                @RenderBody()
+
+            </div>
+        </div>
+
+        }
+   
+   
+   
    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

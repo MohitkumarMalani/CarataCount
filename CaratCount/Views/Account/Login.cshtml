@@ -18,11 +18,11 @@
                                     <form method="post" asp-controller="Account" asp-action="LogIn" asp-route-returnUrl="@Model.ReturnUrl" class="user">
                                         <div class="form-group">
                                             <span asp-validation-for="UserName" class="text-danger"></span>
-                                <input asp-for="UserName" class="form-control form-control-user" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                                            <input asp-for="UserName" class="form-control form-control-user" placeholder="Enter User Name">
                                         </div>
                                         <div class="form-group">
                                         <span asp-validation-for="Password" class="text-danger"></span>
-                                            <input asp-for="Password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" data-ddg-inputtype="credentials.password.current">
+                                            <input asp-for="Password" type="password" class="form-control form-control-user" placeholder="Password" data-ddg-inputtype="credentials.password.current">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">

@@ -12,7 +12,7 @@ namespace CaratCount.Entities
         public override string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "GSTIN is required")]
-        [RegularExpression(@"^\d{2}[A-Z]{5}\d{4}[A-Z]\d{1}$", ErrorMessage = "GSTIN must be in the format 00AAAAA0000A0Z0")]
+        [RegularExpression(@"^\d{2}[A-Z]{5}\d{4}[A-Z]\d{1}[A-Z]\d{1}$$", ErrorMessage = "GSTIN must be in the format 00AAAAA0000A0Z0")]
         public string? GstInNo { get; set; }
 
         public ICollection<GstInDetail>? GstInDetails { get; set; }

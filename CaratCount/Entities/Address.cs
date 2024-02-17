@@ -32,8 +32,8 @@ namespace CaratCount.Entities
         [Required(ErrorMessage = "Country is required")]
         public string? Country { get; set; }
 
-        [Required(ErrorMessage = "Floor Number is required")]
-        [RegularExpression(@"^\d{6}$", ErrorMessage = "The PostalCode must be a six-digit number.")]
+        [Required(ErrorMessage = "Postal code is required")]
+        [RegularExpression(@"^\d{6}$", ErrorMessage = "PostalCode must be a six-digit number.")]
         public string? PostalCode { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }

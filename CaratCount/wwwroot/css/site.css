@@ -3,13 +3,12 @@ html {
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
-    height: 100%;
+    min-height: 100%;
 }
 
 
 body {
-    height: 100%;
-    margin: 0;
+    min-height: 100%;
     font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-size: 1rem;
     font-weight: 400;
@@ -19,10 +18,148 @@ body {
     background-color: #fff;
 }
 
-.login-body,.register-body,.bg-gradient-primary {
+#wrapper {
+    display: flex;
+}
+
+#content {
+    width: 100%
+}
+
+.login-body, .register-body, .bg-gradient-primary {
     background-color: #4e73df;
     background-image: linear-gradient(180deg,#4e73df 10%,#224abe 100%);
     background-size: cover;
+}
+
+.sidebar {
+    width: 6.5rem;
+    min-height: 100vh;
+}
+
+.bg-gradient-primary {
+    background-color: #4e73df;
+    background-image: linear-gradient(180deg,#4e73df 10%,#224abe 100%);
+    background-size: cover;
+}
+
+#wrapper #content-wrapper #content {
+    flex: 1 0 auto;
+}
+
+.accordion {
+    overflow-anchor: none;
+}
+
+.sidebar-dark .sidebar-brand {
+    color: #fff;
+}
+
+.sidebar .sidebar-brand {
+    height: 4.375rem;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .05rem;
+    z-index: 1;
+}
+
+.sidebar-dark hr.sidebar-divider {
+    border-top: 1px solid rgba(255,255,255,.15);
+}
+
+.sidebar hr.sidebar-divider {
+    margin: 0 1rem 1rem;
+}
+
+
+
+.sidebar .nav-item .nav-link span {
+    font-size: .85rem;
+    display: block;
+}
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.sidebar-dark .nav-item.active .nav-link {
+    color: #fff;
+}
+
+
+
+.sidebar-dark .nav-item .nav-link {
+    color: rgba(255,255,255,.8);
+}
+
+    .sidebar-dark .nav-item .nav-link:active, .sidebar-dark .nav-item .nav-link:focus, .sidebar-dark .nav-item .nav-link:hover {
+        color: #fff;
+    }
+
+
+.sidebar-dark .nav-item .nav-link {
+    color: rgba(255,255,255,.8);
+}
+
+.sidebar .nav-item .nav-link {
+    text-align: center;
+    padding: 0.65rem 0.75rem;
+    width: 6.5rem;
+}
+
+.sidebar-dark .sidebar-heading {
+    color: rgba(255,255,255,.4);
+}
+
+.nav-link svg {
+    fill: rgba(255,255,255);
+}
+
+.sidebar .sidebar-heading {
+    text-align: center;
+    padding: 0 1rem;
+    font-weight: 800;
+    font-size: .65rem;
+}
+
+.sidebar .nav-item.active .nav-link {
+    font-weight: 700;
+}
+
+.sidebar .sidebar-heading, .text-uppercase {
+    text-transform: uppercase !important;
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+.text-xs {
+    font-size: .7rem;
+}
+
+.text-primary {
+    color: #4e73df !important;
+}
+
+.font-weight-bold {
+    font-weight: 700 !important;
 }
 
 .form-group {
@@ -31,7 +168,7 @@ body {
 
 form.user .form-control-user {
     font-size: 0.85rem;
-    border-radius: 10rem;
+    border-radius: 1rem;
     padding: 1rem 1rem;
 }
 
@@ -54,7 +191,7 @@ input[type=checkbox], input[type=radio] {
 .custom-control-input {
     margin-left: 0.5rem;
     width: 0.95rem;
-    height: 0.95rem;  
+    height: 0.95rem;
 }
 
 form.user .btn-user {
@@ -62,8 +199,36 @@ form.user .btn-user {
     font-size: .9rem;
     border-radius: 10rem;
     padding: 0.75rem 1rem;
-    
 }
+
+@media (min-width: 768px) {
+    .sidebar .nav-item .nav-link span {
+        font-size: .85rem;
+        display: inline;
+    }
+
+    .sidebar .nav-item .nav-link {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 0.75rem;
+        width: 14rem;
+    }
+
+        .sidebar .nav-item .nav-link span {
+            font-size: .85rem;
+            display: inline;
+        }
+
+    .sidebar {
+        width: 14rem !important;
+    }
+
+        .sidebar .sidebar-heading {
+            text-align: left;
+        }
+}
+
 
 a {
     text-decoration: none;

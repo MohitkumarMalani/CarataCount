@@ -28,6 +28,12 @@ namespace CaratCount.Data
                 await roleManager.CreateAsync(new IdentityRole(roleName));
             }
 
+            // if role doesn't exist, create it
+            if (await roleManager.FindByNameAsync("User") == null)
+            {
+                await roleManager.CreateAsync(new IdentityRole("User"));
+            }
+
             // if username doesn't exist, create it and add it to role
             if (await userManager.FindByEmailAsync(email) == null)
             {

@@ -30,8 +30,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
+    options.AccessDeniedPath = "/account/accessdenied";
     options.LoginPath = "/account/login";
-    options.AccessDeniedPath = "/account/access-denied";
     options.SlidingExpiration = true;
 });
 
@@ -52,7 +52,6 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapControllerRoute(
     name: "default",

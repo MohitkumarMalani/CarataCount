@@ -1,0 +1,56 @@
+﻿@model List<ApplicationUser>
+
+@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<div class="container-fluid mt-2">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Admin Dashboard</h1>
+       
+    </div>
+
+    <div class="card shadow mb-4 mx-3">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Users Info</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" style="overflow: hidden;">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered dataTable" id="dataTable" cellspacing="0" role="grid">
+                            @if (Model.Any())
+                            {
+                                <thead>
+                                    <tr>
+                                        <th>User Name</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>GSTIN Number</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model)
+                                    {
+                                        <tr>
+                                            <td>@user.UserName</td>
+                                            <td>@user.Email</td>
+                                            <td>@user.PhoneNumber</td>
+                                            <td>@user.GstInNo</td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            }
+                            else
+                            {
+                                <p>No users available.</p>
+                            }
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

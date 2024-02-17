@@ -1,4 +1,5 @@
-﻿using CaratCount.Models;
+﻿using System.Net;
+using CaratCount.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,22 @@ namespace CaratCount.Data
         {
         }
 
-        
+        public DbSet<GstInDetail> GstInDetails { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<GstInDetail>()
+                .HasKey(g => g.Id);
+
+            modelBuilder.Entity<ApplicationUser>()
+                 .HasMany(u => u.GstInDetails)
+                 .WithOne(g => g.User)
+                 .HasForeignKey(g => g.UserId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+
+        }
     }
 }

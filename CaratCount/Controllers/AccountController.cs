@@ -1,4 +1,5 @@
-﻿using CaratCount.Models;
+﻿using CaratCount.Entities;
+using CaratCount.Models;
 using CaratCount.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,14 @@ namespace CaratCount.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+        }
+
+        // GET: /account/register
+        [HttpGet]
+        public IActionResult Register()
+        {
+            ViewBag.PageName = "Register";
+            return View();
         }
 
         // GET: /account/login

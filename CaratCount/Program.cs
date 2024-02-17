@@ -1,5 +1,5 @@
 using CaratCount.Data;
-using CaratCount.Models;
+using CaratCount.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,0 +1,48 @@
+﻿@model LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="row justify-content-center">
+
+            <div class="col-xl-5 col-lg-10">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="col-lg-10 mx-auto">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                    </div>
+                                    <form method="post" asp-controller="Account" asp-action="LogIn" asp-route-returnUrl="@Model.ReturnUrl" class="user">
+                                        <div class="form-group">
+                                            <span asp-validation-for="UserEmail" class="text-danger"></span>
+                                            <input asp-for="UserEmail" class="form-control form-control-user" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                                        </div>
+                                        <div class="form-group">
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                            <input asp-for="Password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" data-ddg-inputtype="credentials.password.current">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" asp-for="RememberMe">
+                                                <label asp-for="RememberMe" class="custom-control-label">Remember Me</label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            Login
+                                        </button>
+                                        
+                                    </form>
+                                   
+                                    <div class="text-center mt-3">
+                                        <a asp-controller="Account" asp-action="Register" class="small">Create an Account!</a>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+</div>

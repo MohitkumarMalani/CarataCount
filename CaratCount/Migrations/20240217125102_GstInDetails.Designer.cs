@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CaratCount.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240217123939_GstInDetail")]
-    partial class GstInDetail
+    [Migration("20240217125102_GstInDetails")]
+    partial class GstInDetails
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

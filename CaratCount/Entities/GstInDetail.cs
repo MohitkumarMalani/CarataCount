@@ -12,15 +12,17 @@ namespace CaratCount.Entities
         public string? GstInNo { get; set; }
         public string UserId { get; set; }
 
+        public Guid AddressId { get; set; }
+
         [Required(ErrorMessage = "Legal name is required")]
         public string? LegalName { get; set; }
 
         [Required(ErrorMessage = "Trade name is required")]
         public string? TradeName { get; set; }
       
-
-        // Navigation properties
         public ApplicationUser? User { get; set; }
-  
+        public Address? Address { get; set; }
+
+
     }
 }

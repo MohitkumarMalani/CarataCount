@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using CaratCount.Entities;
+using CaratCount.Migrations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +45,7 @@ namespace CaratCount.Data
         }
 
         public DbSet<GstInDetail> GstInDetails { get; set; }
-
+        public DbSet<Address> Addresses { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -52,13 +53,21 @@ namespace CaratCount.Data
             modelBuilder.Entity<GstInDetail>()
                 .HasKey(g => g.Id);
 
+            modelBuilder.Entity<Address>()
+            .HasKey(a => a.Id);
+
+
             modelBuilder.Entity<ApplicationUser>()
-                 .HasMany(u => u.GstInDetails)
-                 .WithOne(g => g.User)
-                 .HasForeignKey(g => g.UserId)
-                 .OnDelete(DeleteBehavior.Restrict);
+                .HasMany(u => u.GstInDetails)
+                .WithOne(g => g.User)
+                .HasForeignKey(g => g.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-
+            modelBuilder.Entity<GstInDetail>()
+                .HasOne(g => g.Address)
+                .WithOne(a => a.GstInDetail)
+                .HasForeignKey<GstInDetail>(g => g.AddressId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

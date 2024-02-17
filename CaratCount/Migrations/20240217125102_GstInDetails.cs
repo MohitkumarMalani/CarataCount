@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CaratCount.Migrations
 {
-    public partial class GstInDetail : Migration
+    public partial class GstInDetails : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -30,8 +30,9 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
-        
+        <toast></toast>
             @RenderBody()
         
     </div>
@@ -41,6 +42,10 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        var toastEl = document.getElementById('toast');
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();</script>
 </body>
 </html>
 

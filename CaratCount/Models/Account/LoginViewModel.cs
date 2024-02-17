@@ -4,9 +4,9 @@ namespace CaratCount.Models.Account
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "Please enter a email.")]
+        [Required(ErrorMessage = "Please enter a user name.")]
         [StringLength(255)]
-        public string? UserEmail { get; set; }
+        public string? UserName { get; set; }
 
         [Required(ErrorMessage = "Please enter a password.")]
         [StringLength(255)]

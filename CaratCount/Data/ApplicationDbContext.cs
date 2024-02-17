@@ -29,7 +29,7 @@ namespace CaratCount.Data
             // if username doesn't exist, create it and add it to role
             if (await userManager.FindByEmailAsync(email) == null)
             {
-                ApplicationUser user = new ApplicationUser { Email = email, PhoneNumber = phoneNumber, GstInNo = gstInNo };
+                ApplicationUser user = new ApplicationUser { UserName= roleName,Email = email, PhoneNumber = phoneNumber, GstInNo = gstInNo };
                 var result = await userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {

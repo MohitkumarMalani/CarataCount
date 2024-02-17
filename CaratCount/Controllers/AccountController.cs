@@ -33,12 +33,11 @@ namespace CaratCount.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> LogIn(LoginViewModel model)
         {
-            _logger.LogInformation("login",model.RememberMe.ToString());
+
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.UserEmail, model.Password,
-                            isPersistent: model.RememberMe, lockoutOnFailure: false);
-
+                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password,
+                   isPersistent: model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
@@ -47,13 +46,25 @@ namespace CaratCount.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        // if the logged-in user is an admin
+                        var user = await _userManager.FindByNameAsync(model.UserName);
+                        var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+                        if (isAdmin)
+                        {
+                            return RedirectToAction("Admin", "Dashboard");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Dashboard");
+                        }
                     }
                 }
             }
 
-            ViewBag.PageName = "Login";
-            ModelState.AddModelError("", "Invalid username/password.");
+                ViewBag.PageName = "Login";
+            TempData["ToastMessage"] = "Invalid username/password.";
+            TempData["ToastStatus"] = ToastStatus.Danger;
             return View(model);
         }
     }

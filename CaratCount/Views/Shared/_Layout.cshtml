@@ -10,7 +10,7 @@
 </head>
 <body class="@GetBodyClass(ViewBag.PageName ?? string.Empty)">
 
-    @if (ViewBag.PageName == "Home" || ViewBag.PageName == "Register" || ViewBag.PageName == "Login" || ViewBag.PageName == "AccessDenied" || ViewBag.PageName == "Admin")
+    @if (ViewBag.PageName == "Home" || ViewBag.PageName == "Register" || ViewBag.PageName == "Login" || ViewBag.PageName == "AccessDenied" || ViewBag.PageName == "Blocked" || ViewBag.PageName == "Admin")
         {
             <header>
                 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -25,18 +25,25 @@
 
                         @using Microsoft.AspNetCore.Identity
                         @inject SignInManager<ApplicationUser> _signInManager
+                        @inject UserManager<ApplicationUser> _userManager
 
                         <ul class="navbar-nav flex-grow-1">
                             @if (_signInManager.IsSignedIn(User))
                             {
 
+                                var user = await _userManager.GetUserAsync(User);
+                                
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                                    @if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
+                                    {
+                                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Dashboard</a>
+                                    } else
+                                    {
+                                        <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                                    }
                                 </li>
                             }
                         </ul>
-
-                   
 
                     <ul class="navbar-nav flex-grow-0">
                         @if (_signInManager.IsSignedIn(User))
@@ -132,9 +139,7 @@
         </div>
 
         }
-   
-   
-   
+
    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

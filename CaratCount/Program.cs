@@ -1,5 +1,6 @@
 using CaratCount.Data;
 using CaratCount.Entities;
+using CaratCount.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +31,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
-    options.AccessDeniedPath = "/account/accessdenied";
+    options.AccessDeniedPath = "/account/access-denied";
     options.LoginPath = "/account/login";
     options.SlidingExpiration = true;
 });
@@ -53,9 +54,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseBlockedUserMiddleware();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 
 var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 using (var scope = scopeFactory.CreateScope())

@@ -9,8 +9,8 @@ namespace CaratCount.Controllers
 {
     public class AccountController : Controller
     {
-        private UserManager<ApplicationUser> _userManager;
-        private SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<HomeController> _logger;
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<HomeController> logger)
         {
@@ -93,10 +93,15 @@ namespace CaratCount.Controllers
                         {
                             return RedirectToAction("Index", "Admin");
                         }
+                        if (user.IsBlocked)
+                        {
+                            return RedirectToAction("Blocked", "Account"); 
+                        }
                         else
                         {
                             return RedirectToAction("Index", "Dashboard");
                         }
+                        
                     }
                 }
             }
@@ -117,8 +122,17 @@ namespace CaratCount.Controllers
         }
 
 
+        // GET: /account/blocked
+        [HttpGet("/account/blocked")]
+        [AllowAnonymous]
+        public IActionResult Blocked()
+        {
+            ViewBag.PageName = "Blocked";
+            return View();
+        }
+
         // Get: /account/access-denied
-        [HttpGet]
+        [HttpGet("/account/access-denied")]
         [AllowAnonymous]
         public IActionResult AccessDenied(string returnUrl = null)
         {

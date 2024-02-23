@@ -15,6 +15,7 @@ namespace CaratCount.Entities
         [RegularExpression(@"^\d{2}[A-Z]{5}\d{4}[A-Z]\d{1}[A-Z]\d{1}$$", ErrorMessage = "GSTIN must be in the format 00AAAAA0000A0Z0")]
         public string? GstInNo { get; set; }
 
+        public bool IsBlocked { get; set; } = false;
         public ICollection<GstInDetail>? GstInDetails { get; set; }
     }
 }

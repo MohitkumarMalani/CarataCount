@@ -15,7 +15,7 @@ namespace CaratCount.Entities
 
         [Required(ErrorMessage = "Floor Number is required")]
         public string? FloorNumber { get; set; }
-        public string UnitNumber { get; set; }
+        public string? UnitNumber { get; set; }
 
         [Required(ErrorMessage = "Locality is required")]
         public string? Locality { get; set; }
@@ -35,8 +35,6 @@ namespace CaratCount.Entities
         [Required(ErrorMessage = "Postal code is required")]
         [RegularExpression(@"^\d{6}$", ErrorMessage = "PostalCode must be a six-digit number.")]
         public string? PostalCode { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
 
         public GstInDetail? GstInDetail { get; set; }
     }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CaratCount.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240306101241_User")]
+    [Migration("20240306165932_User")]
     partial class User
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,9 @@ namespace CaratCount.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Locality")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
@@ -73,7 +67,6 @@ namespace CaratCount.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UnitNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -176,7 +169,6 @@ namespace CaratCount.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -184,7 +176,9 @@ namespace CaratCount.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("GstInDetails");
                 });
@@ -331,10 +325,9 @@ namespace CaratCount.Migrations
                         .IsRequired();
 
                     b.HasOne("CaratCount.Entities.ApplicationUser", "User")
-                        .WithMany("GstInDetails")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithOne("GstInDetail")
+                        .HasForeignKey("CaratCount.Entities.GstInDetail", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Address");
 
@@ -399,7 +392,7 @@ namespace CaratCount.Migrations
 
             modelBuilder.Entity("CaratCount.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("GstInDetails");
+                    b.Navigation("GstInDetail");
                 });
 #pragma warning restore 612, 618
         }

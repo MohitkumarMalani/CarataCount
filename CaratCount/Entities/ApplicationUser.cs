@@ -16,6 +16,6 @@ namespace CaratCount.Entities
         public string? GstInNo { get; set; }
 
         public bool IsBlocked { get; set; } = false;
-        public ICollection<GstInDetail>? GstInDetails { get; set; }
+        public GstInDetail? GstInDetail { get; set; }
     }
 }

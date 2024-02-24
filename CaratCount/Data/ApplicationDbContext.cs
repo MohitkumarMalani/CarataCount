@@ -64,10 +64,11 @@ namespace CaratCount.Data
 
 
             modelBuilder.Entity<ApplicationUser>()
-                .HasMany(u => u.GstInDetails)
-                .WithOne(g => g.User)
-                .HasForeignKey(g => g.UserId)
+                .HasOne(u => u.GstInDetail)
+                    .WithOne(g => g.User)
+                .HasForeignKey<GstInDetail>(g => g.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<GstInDetail>()
                 .HasOne(g => g.Address)

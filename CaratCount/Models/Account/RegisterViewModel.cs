@@ -5,11 +5,9 @@ namespace CaratCount.Models.Account
     public class RegisterViewModel 
     {
         [Required(ErrorMessage = "User name is required")]
-        [StringLength(255)]
         public string? UserName { get; set; }
 
         [Required(ErrorMessage = "User email is required")]
-        [StringLength(255)]
         [EmailAddress(ErrorMessage ="Invalid email address")]
         public string? UserEmail { get; set; }
 
@@ -23,7 +21,6 @@ namespace CaratCount.Models.Account
         public string? GstInNo { get; set; }
 
         [Required(ErrorMessage = "Please enter a password.")]
-        [StringLength(255)]
         public string? Password { get; set; }
 
     }

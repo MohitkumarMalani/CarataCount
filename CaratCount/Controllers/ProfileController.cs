@@ -196,6 +196,8 @@ namespace CaratCount.Controllers
                     };
 
                     _context.GstInDetails.Add(gstInDetail);
+
+                    user.GstInDetailId = gstInDetail.Id;
                 }
 
                 try

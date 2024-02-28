@@ -10,9 +10,6 @@ namespace CaratCount.Entities
         [Required(ErrorMessage = "GSTIN is required")]
         [RegularExpression(@"^\d{2}[A-Z]{5}\d{4}[A-Z]\d{1}$", ErrorMessage = "GSTIN must be in the format 00AAAAA0000A0Z0")]
         public string? GstInNo { get; set; }
-        public string? UserId { get; set; }
-
-        public Guid AddressId { get; set; }
 
         [Required(ErrorMessage = "Legal name is required")]
         public string? LegalName { get; set; }
@@ -20,7 +17,13 @@ namespace CaratCount.Entities
         [Required(ErrorMessage = "Trade name is required")]
         public string? TradeName { get; set; }
 
+        public string? UserId { get; set; }
+
+        public Guid AddressId { get; set; }
+
+        public Client? Client { get; set; }
         public ApplicationUser? User { get; set; }
+        
         public Address? Address { get; set; }
 
 

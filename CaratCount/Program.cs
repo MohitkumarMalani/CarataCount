@@ -1,5 +1,7 @@
 using CaratCount.Data;
 using CaratCount.Entities;
+using CaratCount.Interface;
+using CaratCount.Managers;
 using CaratCount.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IClientManager, ClientManager>();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 string connStr = builder.Configuration.GetConnectionString("DefaultConnection");

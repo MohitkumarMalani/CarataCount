@@ -52,9 +52,14 @@ namespace CaratCount.Data
 
         public DbSet<GstInDetail> GstInDetails { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Client>()
+                .HasKey(c => c.Id);
 
             modelBuilder.Entity<GstInDetail>()
                 .HasKey(g => g.Id);
@@ -66,9 +71,20 @@ namespace CaratCount.Data
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(u => u.GstInDetail)
                     .WithOne(g => g.User)
-                .HasForeignKey<GstInDetail>(g => g.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey<ApplicationUser>(a => a.GstInDetailId)
+                .IsRequired(false);
 
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Clients) 
+                .WithOne(c => c.User) 
+                .HasForeignKey(c => c.UserId) 
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Client>()
+                .HasOne(c => c.GstInDetail)
+                .WithOne(g => g.Client)
+                .HasForeignKey<Client>(c => c.GstInDetailId)  
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GstInDetail>()
                 .HasOne(g => g.Address)
@@ -76,5 +92,6 @@ namespace CaratCount.Data
                 .HasForeignKey<GstInDetail>(g => g.AddressId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
+
     }
 }

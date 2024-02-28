@@ -16,6 +16,10 @@ namespace CaratCount.Entities
         public string? GstInNo { get; set; }
 
         public bool IsBlocked { get; set; } = false;
+
+        public Guid? GstInDetailId { get; set; } = null;
         public GstInDetail? GstInDetail { get; set; }
+        public ICollection<Client>? Clients { get; set; }
+
     }
 }

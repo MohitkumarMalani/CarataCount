@@ -18,8 +18,8 @@ namespace CaratCount.TagHelpers
             {
 
                 // status and message from TempData
-                string? status = ViewContext.TempData["ToastStatus"].ToString();
-                string? message = ViewContext.TempData["ToastMessage"].ToString();
+                string? status = ViewContext?.TempData["ToastStatus"]?.ToString();
+                string? message = ViewContext?.TempData["ToastMessage"]?.ToString();
 
                 // close button
                 var closeButton = new TagBuilder("button");
@@ -38,7 +38,7 @@ namespace CaratCount.TagHelpers
                 var innerDiv = new TagBuilder("div");
                 innerDiv.Attributes.Add("class", "d-flex");
 
-                // appending body diva and close button to inner div
+                // appending body div and close button to inner div
                 innerDiv.InnerHtml.AppendHtml(bodyDiv);
                 innerDiv.InnerHtml.AppendHtml(closeButton);
 
@@ -56,6 +56,7 @@ namespace CaratCount.TagHelpers
                 // output content
                 output.TagName = "div";
                 output.Attributes.Add("class", "position-fixed bottom-0 end-0 p-3");
+                output.Attributes.Add("style", "z-index: 1000");
 
                 // append toast div to output content
                 output.Content.AppendHtml(toastDiv);

@@ -22,5 +22,7 @@ namespace CaratCount.Entities
 
         public ApplicationUser? User { get; set; }
         public GstInDetail? GstInDetail { get; set; }
+
+        public ICollection<DiamondPacket>? DiamondPacket { get; set; }
     }
 }

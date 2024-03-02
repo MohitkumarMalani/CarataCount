@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IClientManager, ClientManager>();
+builder.Services.AddScoped<IDiamondPacketManager, DiamondPacketManager>();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 string connStr = builder.Configuration.GetConnectionString("DefaultConnection");

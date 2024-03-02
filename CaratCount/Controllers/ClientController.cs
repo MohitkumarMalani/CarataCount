@@ -15,13 +15,11 @@ namespace CaratCount.Controllers
 {
     public class ClientController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IClientManager _clientManager;
 
-        public ClientController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IClientManager clientManager)
+        public ClientController(UserManager<ApplicationUser> userManager, IClientManager clientManager)
         {
-            _context = context;
             _userManager = userManager;
             _clientManager = clientManager;
         }
@@ -56,7 +54,7 @@ namespace CaratCount.Controllers
 
             if (user == null)
             {
-                return RedirectToAction("Index", "Home");
+                return NotFound();
             }
 
             ClientViewModel? clientViewModel = new () { UserId = user.Id };
@@ -120,7 +118,7 @@ namespace CaratCount.Controllers
 
             if (userId == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Client");
             }
 
             Client? client = await _clientManager.GetClientByIdAsync(id, userId);
@@ -245,6 +243,9 @@ namespace CaratCount.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.PageName = "Client";
+            ViewBag.PageAction = "Edit";
 
             if (ModelState.IsValid)
             {

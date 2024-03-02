@@ -87,43 +87,43 @@
                 </a>
                 <hr class="sidebar-divider my-0" />
 
-                <li class="nav-item @(ViewBag.PageName == "Dashboard" ? "active" : "")">
+                <li class="nav-item @(ViewBag?.PageName == "Dashboard" ? "active" : "")">
                     <a class="nav-link" asp-action="Index" asp-controller="Dashboard">
                         <span>Dashboard</span>
                     </a>
                 </li>
 
-                <li class="nav-item @(ViewBag.PageName == "Client" ? "active" : "")">
+                <li class="nav-item @(ViewBag?.PageName == "Client" ? "active" : "")">
                     <a class="nav-link" asp-controller="Client" asp-action="Index">
                         <span>Client</span>
                     </a>
                 </li>
 
-                <li class="nav-item @(ViewBag.PageName == "DiamondPacket" ? "active" : "")">
+                <li class="nav-item @(ViewBag?.PageName == "DiamondPacket" ? "active" : "")">
                     <a class="nav-link" asp-action="Index" asp-controller="DiamondPacket">
                         <span>Diamond Packet</span>
                     </a>
                 </li>
 
-                <li class="nav-item @(ViewBag.PageName == "Process" ? "active" : "")">
+                <li class="nav-item @(ViewBag?.PageName == "Process" ? "active" : "")">
                     <a class="nav-link" asp-action="Index" asp-controller="Process">
                         <span>Process</span>
                     </a>
                 </li>
 
-                <li class="nav-item @(ViewBag.PageName == "Employee" ? "active" : "")">
+                <li class="nav-item @(ViewBag?.PageName == "Employee" ? "active" : "")">
                     <a class="nav-link" asp-action="Index" asp-controller="Employee">
                         <span>Employee</span>
                     </a>
                 </li>
 
-                <li class="nav-item @(ViewBag.PageName == "Invoices" ? "active" : "")">
+                <li class="nav-item @(ViewBag?.PageName == "Invoices" ? "active" : "")">
                     <a class="nav-link" asp-action="Index" asp-controller="Invoices">
                         <span>Invoices</span>
                     </a>
                 </li>
 
-                <li class="nav-item @(ViewBag.PageName == "Profile" ? "active" : "")">
+                <li class="nav-item @(ViewBag?.PageName == "Profile" ? "active" : "")">
                     <a class="nav-link" asp-action="Index" asp-controller="Profile">
                         <span>Profile</span>
                     </a>

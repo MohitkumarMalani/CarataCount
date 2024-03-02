@@ -1,6 +1,4 @@
-﻿using System.Net;
-using CaratCount.Entities;
-using CaratCount.Migrations;
+﻿using CaratCount.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +35,7 @@ namespace CaratCount.Data
             // if username doesn't exist, create it and add it to role
             if (await userManager.FindByEmailAsync(email) == null)
             {
-                ApplicationUser user = new ApplicationUser { UserName= roleName,Email = email, PhoneNumber = phoneNumber, GstInNo = gstInNo };
+                ApplicationUser user = new ApplicationUser { UserName = roleName, Email = email, PhoneNumber = phoneNumber, GstInNo = gstInNo };
                 var result = await userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
@@ -53,7 +51,8 @@ namespace CaratCount.Data
         public DbSet<GstInDetail> GstInDetails { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Client> Clients { get; set; }
-        
+        public DbSet<DiamondPacket> DiamondPackets { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -67,6 +66,8 @@ namespace CaratCount.Data
             modelBuilder.Entity<Address>()
             .HasKey(a => a.Id);
 
+            modelBuilder.Entity<DiamondPacket>()
+            .HasKey(d => d.Id);
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(u => u.GstInDetail)
@@ -75,15 +76,15 @@ namespace CaratCount.Data
                 .IsRequired(false);
 
             modelBuilder.Entity<ApplicationUser>()
-                .HasMany(u => u.Clients) 
-                .WithOne(c => c.User) 
-                .HasForeignKey(c => c.UserId) 
+                .HasMany(u => u.Clients)
+                .WithOne(c => c.User)
+                .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Client>()
                 .HasOne(c => c.GstInDetail)
                 .WithOne(g => g.Client)
-                .HasForeignKey<Client>(c => c.GstInDetailId)  
+                .HasForeignKey<Client>(c => c.GstInDetailId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GstInDetail>()
@@ -91,7 +92,18 @@ namespace CaratCount.Data
                 .WithOne(a => a.GstInDetail)
                 .HasForeignKey<GstInDetail>(g => g.AddressId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DiamondPacket>()
+                .Property(d => d.CaratWeight)
+                .HasColumnType("decimal(10,2)");
+
+            modelBuilder.Entity<DiamondPacket>()
+                .HasOne(d => d.Client)
+                .WithMany(c => c.DiamondPacket)
+                .HasForeignKey(d => d.ClientId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
+
 
     }
 }

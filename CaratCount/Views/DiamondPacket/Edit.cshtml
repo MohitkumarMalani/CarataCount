@@ -1,0 +1,111 @@
+﻿@model DiamondPacket
+
+@{
+    ViewData["Title"] = ViewBag?.PageName + " Page";
+    List<Client>? clients = ViewData["Clients"] as List<Client>;
+
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">@ViewBag?.PageAction Diamond Packet Information</h1>
+        <a asp-action="Index" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="white" height="12" width="12" class="m-1"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" /></svg>
+            Back to Diamond Packets
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-10">
+            <div class="p-4">
+                <form method="post" asp-controller="DiamondPacket" asp-action="@ViewBag?.PageAction" class="user">
+                    <input type="hidden" asp-for="UserId" />
+                    <div class=" mb-4">
+                      
+                            <h5>Diamond Packet Information</h5>
+                            <hr />
+                            <span asp-validation-for="CaratWeight" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="CaratWeight">Carat Weight:</label>
+                                <input asp-for="CaratWeight" class="form-control form-control-user" placeholder="Enter Carat Weight">
+                            </div>
+
+                            <span asp-validation-for="Clarity" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="Clarity">Clarity:</label>
+                                <select asp-for="Clarity" class="form-control form-control-user">
+                                    @foreach (var clarity in Enum.GetValues(typeof(ClarityLevel)))
+                                    {
+                                        <option value="@clarity">@clarity</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <span asp-validation-for="Cut" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="Cut">Cut:</label>
+                                <select asp-for="Cut" class="form-control form-control-user">
+                                    @foreach (var cut in Enum.GetValues(typeof(CutType)))
+                                    {
+                                        <option value="@cut">@cut</option>
+                                    }
+                                </select>
+                            </div>
+							
+                            <span asp-validation-for="Color" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="Color">Color:</label>
+                                <select asp-for="Color" class="form-control form-control-user">
+                                    @foreach (var color in Enum.GetValues(typeof(ColorType)))
+                                    {
+                                        <option value="@color">@color</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <span asp-validation-for="NumberOfDiamond" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="NumberOfDiamond">Number of Diamonds:</label>
+                                <input asp-for="NumberOfDiamond" class="form-control form-control-user" />
+                            </div>
+
+                            <span asp-validation-for="ReceiveDate" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="ReceiveDate">Receive Date:</label>
+                            <input asp-for="ReceiveDate" class="form-control form-control-user" />
+                            </div>
+
+                            <span asp-validation-for="DeliveryDate" class="text-danger "></span>
+                            <div class="form-group">
+                                <label asp-for="DeliveryDate">Delivery Date:</label>
+                            <input asp-for="DeliveryDate" class="form-control form-control-user" />
+                            </div>
+
+                            <span asp-validation-for="ClientId" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="ClientId">Client ID:</label>
+                                <select asp-for="ClientId" class="form-control form-control-user">
+                                <option value="">Select Client</option>
+                                @if(clients.Any())
+                                {
+                                    @foreach (var client in clients)
+                                    {
+                                        <option value="@client.Id">@client.Name</option>
+                                    }   
+                                }
+                              
+                            </select>
+
+                               
+                            </div>
+
+                        <button type="submit" class="btn btn-primary btn-user btn-block">Save</button>
+                    </div>
+                        
+                   
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

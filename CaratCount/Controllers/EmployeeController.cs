@@ -1,9 +1,6 @@
-﻿using System.Net.Sockets;
-using CaratCount.Data;
-using CaratCount.Entities;
+﻿using CaratCount.Entities;
 using CaratCount.Interface;
 using CaratCount.Managers;
-using CaratCount.Migrations;
 using CaratCount.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,21 +8,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CaratCount.Controllers
 {
-    public class DiamondPacketController : Controller
+    public class EmployeeController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IDiamondPacketManager _diamondPacketManager;
-        private readonly IClientManager _clientManager;
+        private readonly IEmployeeManager _employeeManager;
 
-        public DiamondPacketController(UserManager<ApplicationUser> userManager, IDiamondPacketManager diamondPacketManager, IClientManager clientManager)
+
+        public EmployeeController(UserManager<ApplicationUser> userManager, IEmployeeManager employeeManager)
         {
             _userManager = userManager;
-            _diamondPacketManager = diamondPacketManager;
-            _clientManager = clientManager;
+            _employeeManager = employeeManager;
         }
 
-        // GET: /diamond-packet
-        [HttpGet("diamond-packet")]
+        // GET: /employee
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Index()
         {
@@ -37,16 +33,15 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            List<DiamondPacket>? diamondPackets = await _diamondPacketManager
-                .GetDiamondPacketsByUserIdAsync(user.Id);
+            List<Employee>? employees = await _employeeManager.GetEmployeesByUserIdAsync(user.Id);
 
-            ViewBag.PageName = "DiamondPacket";
+            ViewBag.PageName = "Employee";
 
-            return View(diamondPackets);
+            return View(employees);
         }
 
-        // GET: /diamond-packet/add
-        [HttpGet("diamond-packet/add")]
+        // GET: /employee/add
+        [HttpGet]
         [Authorize()]
         public async Task<IActionResult> Add()
         {
@@ -58,17 +53,16 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            DiamondPacket? diamondPacket = new () { UserId = user.Id };
+            Employee? employee = new() { UserId = user.Id };
 
-            ViewData["Clients"] = _clientManager.GetClientsByUserId(user.Id);
 
-            ViewBag.PageName = "DiamondPacket";
+            ViewBag.PageName = "Employee";
             ViewBag.PageAction = "Add";
-            return View("Edit", diamondPacket);
+            return View("Edit", employee);
         }
 
-        // GET: /diamond-packet/details/{id}
-        [HttpGet("diamond-packet/details/{id}")]
+        // GET: /employee/details/{id}
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Details(string id)
         {
@@ -85,17 +79,17 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            DiamondPacket? diamondPacket = await _diamondPacketManager.GetDiamondPacketByIdAsync(id, user.Id);
+            Employee? employee = await _employeeManager.GetEmployeeByIdAsync(id, user.Id);
 
-            if (diamondPacket == null) return NotFound();
+            if (employee == null) return NotFound();
 
-            ViewBag.PageName = "DiamondPacket";
+            ViewBag.PageName = "Employee";
 
-            return View(diamondPacket);
+            return View(employee);
         }
 
-        // GET: /diamond-packet/edit/{id}
-        [HttpGet("diamond-packet/edit/{id}")]
+        // GET: /employee/edit/{id}
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Edit(string id)
         {
@@ -112,22 +106,21 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            DiamondPacket? diamondPacket = await _diamondPacketManager.GetDiamondPacketByIdAsync(id, user.Id);
+            Employee? employee = await _employeeManager.GetEmployeeByIdAsync(id, user.Id);
 
-            if(diamondPacket == null) 
-            { 
-                return NotFound(); 
+            if (employee == null)
+            {
+                return NotFound();
             }
 
-            ViewData["Clients"] = _clientManager.GetClientsByUserId(user.Id);
-            ViewBag.PageName = "DiamondPacket";
+            ViewBag.PageName = "Employee";
             ViewBag.PageAction = "Edit";
 
-            return View(diamondPacket);
+            return View(employee);
         }
 
-        // GET: /diamond-packet/delete/{id}
-        [HttpGet("diamond-packet/delete/{id}")]
+        // GET: /employee/delete/{id}
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Delete(string id)
         {
@@ -143,28 +136,28 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            DiamondPacket? diamondPacket = await _diamondPacketManager.GetDiamondPacketByIdAsync(id, user.Id);
+            Employee? employee = await _employeeManager.GetEmployeeByIdAsync(id, user.Id);
 
-            if (diamondPacket == null) 
-            { 
-                return NotFound(); 
+            if (employee == null)
+            {
+                return NotFound();
             }
 
             TempData["ModalAction"] = "Delete";
-            TempData["ModalController"] = "DiamondPacket";
-            TempData["ModalMessage"] = $"Are you sure you want to delete diamondPacket with id: {diamondPacket.Id}?";
+            TempData["ModalController"] = "Employee";
+            TempData["ModalMessage"] = $"Are you sure you want to delete employee with id: {employee.Id}?";
             TempData["ModalTitle"] = "Confirm Delete";
-            TempData["ModalId"] = diamondPacket.Id;
+            TempData["ModalId"] = employee.Id;
             TempData.Keep();
 
-            return RedirectToAction("Index", "DiamondPacket");
+            return RedirectToAction("Index", "Employee");
         }
 
-        // POST: /diamond-packet/add
-        [HttpPost("diamond-packet/add")]
+        // POST: /employee/add
+        [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(DiamondPacket diamondPacket)
+        public async Task<IActionResult> Add(Employee employee)
         {
             try
             {
@@ -172,25 +165,21 @@ namespace CaratCount.Controllers
 
                 if (ModelState.IsValid)
                 {
-                   
-                    if (user == null || user.Id != diamondPacket.UserId)
+
+                    if (user == null || user.Id != employee.UserId)
                     {
                         return NotFound();
                     }
 
-                    Client? client = await _clientManager.GetClientByIdAsync(diamondPacket.ClientId.ToString(), user.Id);
-                    if (client == null) { return NotFound(); }
+                    await _employeeManager.AddEmployeeAsync(employee);
 
-                    await _diamondPacketManager.AddDiamondPacketAsync(diamondPacket);
-
-                    TempData["ToastMessage"] = "Diamond Packet added successfully.";
+                    TempData["ToastMessage"] = "Employee added successfully.";
                     TempData["ToastStatus"] = ToastStatus.Success;
                     TempData.Keep();
 
-                    return RedirectToAction("Index", "DiamondPacket");
+                    return RedirectToAction("Index", "Employee");
                 }
 
-                       ViewData["Clients"] = _clientManager.GetClientsByUserId(user.Id);
             }
             catch
             {
@@ -204,19 +193,19 @@ namespace CaratCount.Controllers
             TempData["ToastMessage"] = "Something went wrong! Please try again.";
             TempData["ToastStatus"] = ToastStatus.Danger;
 
-           
-            ViewBag.PageName = "DiamondPacket";
+
+            ViewBag.PageName = "Employee";
             ViewBag.PageAction = "Add";
-            return View("Edit", diamondPacket);
+            return View("Edit", employee);
 
         }
 
 
-        // POST: /diamond-packet/edit/{id}
-        [HttpPost("diamond-packet/edit/{id}")]
+        // POST: /employee/edit/{id}
+        [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, DiamondPacket diamondPacket)
+        public async Task<IActionResult> Edit(string id, Employee employee)
         {
 
             if (string.IsNullOrEmpty(id))
@@ -226,8 +215,7 @@ namespace CaratCount.Controllers
 
             ApplicationUser? user = await _userManager.GetUserAsync(User);
 
-            ViewData["Clients"] = _clientManager.GetClientsByUserId(user.Id);
-            ViewBag.PageName = "DiamondPacket";
+            ViewBag.PageName = "Employee";
             ViewBag.PageAction = "Edit";
 
             if (ModelState.IsValid)
@@ -235,42 +223,43 @@ namespace CaratCount.Controllers
                 try
                 {
 
-                    if (diamondPacket.UserId != user.Id)
+                    if (employee.UserId != user.Id)
                     {
                         return NotFound();
                     }
 
-                    await _diamondPacketManager.UpdateDiamondPacketAsync(diamondPacket);
+                    await _employeeManager.UpdateEmployeeAsync(employee);
 
-                    TempData["ToastMessage"] = "Diamond packet updated successfully.";
+                    TempData["ToastMessage"] = "Employee updated successfully.";
                     TempData["ToastStatus"] = ToastStatus.Success;
                     TempData.Keep();
 
-                    return RedirectToAction("Index", "DiamondPacket");
+                    return RedirectToAction("Index", "Employee");
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Console.WriteLine(ex);
                     TempData["ToastMessage"] = "Something went wrong! Please try again.";
                     TempData["ToastStatus"] = ToastStatus.Danger;
                     TempData.Keep();
 
-                    return View(diamondPacket);
+                    return View(employee);
                 }
             }
 
 
-            return View(diamondPacket);
+            return View(employee);
         }
 
-        // POST: /diamond-packet/delete/{id}
-        [HttpPost("diamond-packet/delete/{id}")]
+        // POST: /employee/delete/{id}
+        [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id, bool confirm)
         {
             if (!confirm)
             {
-                return RedirectToAction("Index", "DiamondPacket");
+                return RedirectToAction("Index", "Employee");
             }
 
             if (string.IsNullOrEmpty(id))
@@ -280,26 +269,25 @@ namespace CaratCount.Controllers
 
             ApplicationUser? user = await _userManager.GetUserAsync(User);
 
-
             try
             {
 
-                DiamondPacket? diamondPacket = await _diamondPacketManager.GetDiamondPacketByIdAsync(id, user.Id);
+                Employee? employee = await _employeeManager.GetEmployeeByIdAsync(id, user.Id);
 
-                if (diamondPacket == null)
+                if (employee == null)
                 {
                     return NotFound();
                 }
 
 
-                await _diamondPacketManager.DeleteDiamondPacketAsync(diamondPacket);
+                await _employeeManager.DeleteEmployeeAsync(employee);
 
 
-                TempData["ToastMessage"] = "Diamond packet deleted successfully.";
+                TempData["ToastMessage"] = "Employee deleted successfully.";
                 TempData["ToastStatus"] = ToastStatus.Success;
                 TempData.Keep();
 
-                return RedirectToAction("Index", "DiamondPacket");
+                return RedirectToAction("Index", "Employee");
             }
             catch
             {

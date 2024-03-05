@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IClientManager, ClientManager>();
 builder.Services.AddScoped<IDiamondPacketManager, DiamondPacketManager>();
+builder.Services.AddScoped<IEmployeeManager, EmployeeManager>();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 string connStr = builder.Configuration.GetConnectionString("DefaultConnection");

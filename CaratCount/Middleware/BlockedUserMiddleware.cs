@@ -19,7 +19,7 @@ namespace CaratCount.Middleware
         public async Task InvokeAsync(HttpContext context, UserManager<ApplicationUser> userManager)
         {
 
-            var blockedRoutes = new[] { "/dashboard", "/profile", "/client", "/diamond-packet" };
+            var blockedRoutes = new[] { "/dashboard", "/profile", "/client", "/diamond-packet", "/employee" };
 
             var requestPath = context.Request.Path;
 

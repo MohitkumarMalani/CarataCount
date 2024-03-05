@@ -1,4 +1,5 @@
-﻿using CaratCount.Entities;
+﻿using System.Security.Cryptography.X509Certificates;
+using CaratCount.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,7 @@ namespace CaratCount.Data
         public DbSet<GstInDetail> GstInDetails { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Client> Clients { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<DiamondPacket> DiamondPackets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -68,6 +70,9 @@ namespace CaratCount.Data
 
             modelBuilder.Entity<DiamondPacket>()
             .HasKey(d => d.Id);
+          
+            modelBuilder.Entity<Employee>()
+            .HasKey(e => e.Id);
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(u => u.GstInDetail)
@@ -78,6 +83,12 @@ namespace CaratCount.Data
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Clients)
                 .WithOne(c => c.User)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Employees)
+                .WithOne(e => e.User)
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 

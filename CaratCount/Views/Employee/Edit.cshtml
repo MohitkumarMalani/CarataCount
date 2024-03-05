@@ -1,0 +1,55 @@
+﻿@model Employee
+
+@{
+    ViewData["Title"] = ViewBag?.PageName + " Page";
+
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">@ViewBag?.PageAction Employee Information</h1>
+        <a asp-action="Index" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="white" height="12" width="12" class="m-1"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" /></svg>
+            Back to Employees
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-10">
+            <div class="p-4">
+                <form method="post" asp-controller="Employee" asp-action="@ViewBag?.PageAction" class="user">
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="Id" />
+                    <div class=" mb-4">
+
+                        <h5>Employee Information</h5>
+                            <hr />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="Name">Employee Name:</label>
+                            <input asp-for="Name" class="form-control form-control-user" placeholder="Enter Name">
+                        </div>
+
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="Email">Email:</label>
+                            <input asp-for="Email" class="form-control form-control-user" placeholder="Enter Email">
+                        </div>
+
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="PhoneNumber">Phone Number:</label>
+                            <input asp-for="PhoneNumber" class="form-control form-control-user" placeholder="Enter Phone Number">
+                        </div>
+                               
+
+                        <button type="submit" class="btn btn-primary btn-user btn-block">Save</button>
+                    </div>
+                        
+                   
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

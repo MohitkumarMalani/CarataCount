@@ -8,7 +8,7 @@ namespace CaratCount.Entities
     {
 
         [Required(ErrorMessage = "Phone number is required")]
-        [Phone(ErrorMessage = "Invalid phone number")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Invalid phone number")]
         public override string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "GSTIN is required")]
@@ -20,6 +20,7 @@ namespace CaratCount.Entities
         public Guid? GstInDetailId { get; set; } = null;
         public GstInDetail? GstInDetail { get; set; }
         public ICollection<Client>? Clients { get; set; }
+        public ICollection<Employee>? Employees { get; set; }
 
     }
 }

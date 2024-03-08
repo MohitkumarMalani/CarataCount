@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using CaratCount.Entities;
+﻿using CaratCount.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +53,7 @@ namespace CaratCount.Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<DiamondPacket> DiamondPackets { get; set; }
+        public DbSet<Process> Processes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,10 +70,14 @@ namespace CaratCount.Data
 
             modelBuilder.Entity<DiamondPacket>()
             .HasKey(d => d.Id);
-          
+
             modelBuilder.Entity<Employee>()
             .HasKey(e => e.Id);
 
+            modelBuilder.Entity<Process>()
+            .HasKey(p => p.Id);
+
+     
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(u => u.GstInDetail)
                     .WithOne(g => g.User)
@@ -89,7 +93,13 @@ namespace CaratCount.Data
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Employees)
                 .WithOne(e => e.User)
-                .HasForeignKey(c => c.UserId)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Processes)
+                .WithOne(p => p.User)
+                .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Client>()
@@ -113,6 +123,8 @@ namespace CaratCount.Data
                 .WithMany(c => c.DiamondPacket)
                 .HasForeignKey(d => d.ClientId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+         
         }
 
 

@@ -1,25 +1,29 @@
-﻿using CaratCount.Entities;
+﻿using System.Diagnostics;
+using CaratCount.Entities;
 using CaratCount.Interface;
 using CaratCount.Managers;
 using CaratCount.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Process = CaratCount.Entities.Process;
 
 namespace CaratCount.Controllers
 {
-    public class EmployeeController : Controller
+    public class ProcessController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmployeeManager _employeeManager;
+        private readonly IProcessManager _processManager;
 
-        public EmployeeController(UserManager<ApplicationUser> userManager, IEmployeeManager employeeManager)
+        public ProcessController(UserManager<ApplicationUser> userManager, IEmployeeManager employeeManager, IProcessManager processManager)
         {
             _userManager = userManager;
             _employeeManager = employeeManager;
+            _processManager = processManager;
         }
 
-        // GET: /employee
+        // GET: /process
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Index()
@@ -32,14 +36,14 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            List<Employee>? employees = await _employeeManager.GetEmployeesByUserIdAsync(user.Id);
+            List<Process>? processes = await _processManager.GetProcessesByUserIdAsync(user.Id);
 
-            ViewBag.PageName = "Employee";
+            ViewBag.PageName = "Process";
 
-            return View(employees);
+            return View(processes);
         }
 
-        // GET: /employee/add
+        // GET: /process/add
         [HttpGet]
         [Authorize()]
         public async Task<IActionResult> Add()
@@ -52,15 +56,15 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            Employee? employee = new() { UserId = user.Id };
+            Process? process = new() { UserId = user.Id };
 
 
-            ViewBag.PageName = "Employee";
+            ViewBag.PageName = "Process";
             ViewBag.PageAction = "Add";
-            return View("Edit", employee);
+            return View("Edit", process);
         }
 
-        // GET: /employee/details/{id}
+        // GET: /process/details/{id}
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Details(string id)
@@ -78,16 +82,16 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            Employee? employee = await _employeeManager.GetEmployeeByIdAsync(id, user.Id);
+            Process? process = await _processManager.GetProcessByIdAsync(id, user.Id);
 
-            if (employee == null) return NotFound();
+            if (process == null) return NotFound();
 
-            ViewBag.PageName = "Employee";
+            ViewBag.PageName = "Process";
 
-            return View(employee);
+            return View(process);
         }
 
-        // GET: /employee/edit/{id}
+        // GET: /process/edit/{id}
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Edit(string id)
@@ -105,20 +109,20 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            Employee? employee = await _employeeManager.GetEmployeeByIdAsync(id, user.Id);
+            Process? process = await _processManager.GetProcessByIdAsync(id, user.Id);
 
-            if (employee == null)
+            if (process == null)
             {
                 return NotFound();
             }
 
-            ViewBag.PageName = "Employee";
+            ViewBag.PageName = "Process";
             ViewBag.PageAction = "Edit";
 
-            return View(employee);
+            return View(process);
         }
 
-        // GET: /employee/delete/{id}
+        // GET: /process/delete/{id}
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Delete(string id)
@@ -135,28 +139,28 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            Employee? employee = await _employeeManager.GetEmployeeByIdAsync(id, user.Id);
+            Process? process = await _processManager.GetProcessByIdAsync(id, user.Id);
 
-            if (employee == null)
+            if (process == null)
             {
                 return NotFound();
             }
 
             TempData["ModalAction"] = "Delete";
-            TempData["ModalController"] = "Employee";
-            TempData["ModalMessage"] = $"Are you sure you want to delete employee with id: {employee.Id}?";
+            TempData["ModalController"] = "Process";
+            TempData["ModalMessage"] = $"Are you sure you want to delete process with id: {process.Id}?";
             TempData["ModalTitle"] = "Confirm Delete";
-            TempData["ModalId"] = employee.Id;
+            TempData["ModalId"] = process.Id;
             TempData.Keep();
 
-            return RedirectToAction("Index", "Employee");
+            return RedirectToAction("Index", "Process");
         }
 
-        // POST: /employee/add
+        // POST: /process/add
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(Employee employee)
+        public async Task<IActionResult> Add(Process process)
         {
             try
             {
@@ -165,18 +169,18 @@ namespace CaratCount.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    if (user == null || user.Id != employee.UserId)
+                    if (user == null || user.Id != process.UserId)
                     {
                         return NotFound();
                     }
 
-                    await _employeeManager.AddEmployeeAsync(employee);
+                    await _processManager.AddProcessAsync(process);
 
-                    TempData["ToastMessage"] = "Employee added successfully.";
+                    TempData["ToastMessage"] = "Process added successfully.";
                     TempData["ToastStatus"] = ToastStatus.Success;
                     TempData.Keep();
 
-                    return RedirectToAction("Index", "Employee");
+                    return RedirectToAction("Index", "Process");
                 }
 
             }
@@ -193,18 +197,18 @@ namespace CaratCount.Controllers
             TempData["ToastStatus"] = ToastStatus.Danger;
 
 
-            ViewBag.PageName = "Employee";
+            ViewBag.PageName = "Process";
             ViewBag.PageAction = "Add";
-            return View("Edit", employee);
+            return View("Edit", process);
 
         }
 
 
-        // POST: /employee/edit/{id}
+        // POST: /process/edit/{id}
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, Employee employee)
+        public async Task<IActionResult> Edit(string id, Process process)
         {
 
             if (string.IsNullOrEmpty(id))
@@ -214,7 +218,7 @@ namespace CaratCount.Controllers
 
             ApplicationUser? user = await _userManager.GetUserAsync(User);
 
-            ViewBag.PageName = "Employee";
+            ViewBag.PageName = "Process";
             ViewBag.PageAction = "Edit";
 
             if (ModelState.IsValid)
@@ -222,35 +226,35 @@ namespace CaratCount.Controllers
                 try
                 {
 
-                    if (employee.UserId != user.Id)
+                    if (process.UserId != user.Id)
                     {
                         return NotFound();
                     }
 
-                    await _employeeManager.UpdateEmployeeAsync(employee);
+                    await _processManager.UpdateProcessAsync(process);
 
-                    TempData["ToastMessage"] = "Employee updated successfully.";
+                    TempData["ToastMessage"] = "Process updated successfully.";
                     TempData["ToastStatus"] = ToastStatus.Success;
                     TempData.Keep();
 
-                    return RedirectToAction("Index", "Employee");
+                    return RedirectToAction("Index", "Process");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     TempData["ToastMessage"] = "Something went wrong! Please try again.";
                     TempData["ToastStatus"] = ToastStatus.Danger;
                     TempData.Keep();
 
-                    return View(employee);
+                    return View(process);
                 }
             }
 
 
-            return View(employee);
+            return View(process);
         }
 
-        // POST: /employee/delete/{id}
+        // POST: /process/delete/{id}
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -258,7 +262,7 @@ namespace CaratCount.Controllers
         {
             if (!confirm)
             {
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index", "Process");
             }
 
             if (string.IsNullOrEmpty(id))
@@ -271,22 +275,22 @@ namespace CaratCount.Controllers
             try
             {
 
-                Employee? employee = await _employeeManager.GetEmployeeByIdAsync(id, user.Id);
+                Process? process = await _processManager.GetProcessByIdAsync(id, user.Id);
 
-                if (employee == null)
+                if (process == null)
                 {
                     return NotFound();
                 }
 
 
-                await _employeeManager.DeleteEmployeeAsync(employee);
+                await _processManager.DeleteProcessAsync(process);
 
 
-                TempData["ToastMessage"] = "Employee deleted successfully.";
+                TempData["ToastMessage"] = "Process deleted successfully.";
                 TempData["ToastStatus"] = ToastStatus.Success;
                 TempData.Keep();
 
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index", "Process");
             }
             catch
             {
@@ -294,7 +298,7 @@ namespace CaratCount.Controllers
                 TempData["ToastStatus"] = ToastStatus.Danger;
                 TempData.Keep();
 
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index", "Process");
             }
 
         }

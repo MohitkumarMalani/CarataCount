@@ -22,12 +22,70 @@
             <hr />
             Name: @Model?.Name
             <hr />
-
             Description: @Model?.Description
-           
+            <hr />
+            User Cost: @Model?.ProcessPrices?.Reverse()?.FirstOrDefault()?.UserCost
+            <hr />
+            ClientCharge: @Model?.ProcessPrices?.Reverse()?.FirstOrDefault()?.ClientCharge
+            <hr />
+            ClientCharge: @Model?.ProcessPrices?.Reverse()?.FirstOrDefault()?.CreatedAt
+       
         </div>
     </div>
 
-    
+    <div class="card shadow mb-4 mx-3">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Process Prices History</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" style="overflow: hidden;">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="col-sm-12 ">
+                        <table class="table table-bordered dataTable text-muted" id="dataTable" cellspacing="0" role="grid">
+                            @if (Model.ProcessPrices.Any())
+                            {
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>User Cost</th>
+                                        <th>Client Charge</th>
+                                        <th>Updated At</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    @foreach (var processPrices in Model.ProcessPrices.Reverse())
+                                    {
+                                        <tr>
+                                            <td>@processPrices.Id</td>
+                                            <td>@processPrices.UserCost</td>
+                                            <td>@processPrices.ClientCharge</td>
+                                            <td>@processPrices.UpdatedAt</td>
+                                            <td>@processPrices.CreatedAt</td>
+                                            
+                                        </tr>
+
+                                    }
+                                </tbody>
+                                
+                            }
+                            else
+                            {
+                                <tr>
+                                    <p>
+                                        No process prices history available.
+
+                                      
+                                    </p>
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>

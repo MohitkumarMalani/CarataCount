@@ -60,7 +60,7 @@ namespace CaratCount.Controllers
         // GET: /account/login
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl)
         {
             ViewBag.PageName = "Login";
             var model = new LoginViewModel { ReturnUrl = returnUrl };
@@ -134,7 +134,7 @@ namespace CaratCount.Controllers
         // Get: /account/access-denied
         [HttpGet("/account/access-denied")]
         [AllowAnonymous]
-        public IActionResult AccessDenied(string returnUrl = null)
+        public IActionResult AccessDenied(string returnUrl)
         {
             ViewBag.PageName = "AccessDenied";
             return View();

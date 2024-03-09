@@ -14,7 +14,8 @@ namespace CaratCount.Entities
         public string? Description { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; } = null;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public ICollection<ProcessPrice>? ProcessPrices { get; set; }
         public string? UserId { get; set; }
         public ApplicationUser? User { get; set; }
     }

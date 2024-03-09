@@ -151,7 +151,7 @@ namespace CaratCount.Controllers
             }
 
             TempData["ModalAction"] = "Delete";
-            TempData["ModalController"] = "DiamondPacket";
+            TempData["ModalController"] = "Diamond-Packet";
             TempData["ModalMessage"] = $"Are you sure you want to delete diamondPacket with id: {diamondPacket.Id}?";
             TempData["ModalTitle"] = "Confirm Delete";
             TempData["ModalId"] = diamondPacket.Id;

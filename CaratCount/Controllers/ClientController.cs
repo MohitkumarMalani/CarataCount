@@ -17,7 +17,6 @@ namespace CaratCount.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IClientManager _clientManager;
-
         public ClientController(UserManager<ApplicationUser> userManager, IClientManager clientManager)
         {
             _userManager = userManager;
@@ -101,7 +100,8 @@ namespace CaratCount.Controllers
                 District = client?.GstInDetail?.Address?.District,
                 State = client?.GstInDetail?.Address?.State,
                 Country = client?.GstInDetail?.Address?.Country,
-                PostalCode = client?.GstInDetail?.Address?.PostalCode
+                PostalCode = client?.GstInDetail?.Address?.PostalCode ,
+                DiamondPackets = client?.DiamondPackets
             };
 
             ViewBag.PageName = "Client";

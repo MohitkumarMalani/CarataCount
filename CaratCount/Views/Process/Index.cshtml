@@ -31,6 +31,8 @@
                                         <th>Id</th>
                                         <th>Name</th>
                                         <th>Description</th>
+                                        <th>User Cost</th>
+                                        <th>Client Charge</th>
                                         <th>Actions</th>
           
                                     </tr>
@@ -42,6 +44,9 @@
                                             <td>@process.Id</td>
                                             <td>@process.Name</td>
                                             <td>@process.Description</td>
+                                            <td>@process.ProcessPrices?.Reverse().FirstOrDefault().UserCost</td>
+                                            <td>@process.ProcessPrices?.Reverse().FirstOrDefault().ClientCharge</td>
+
 
 
                                             <td>

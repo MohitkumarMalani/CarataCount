@@ -1,4 +1,5 @@
 ﻿using CaratCount.Entities;
+using CaratCount.Models;
 
 namespace CaratCount.Interface
 {
@@ -8,9 +9,9 @@ namespace CaratCount.Interface
 
         Task<List<Process>?> GetProcessesByUserIdAsync(string userId);
 
-        Task AddProcessAsync(Process process);
+        Task AddProcessAsync(ProcessViewModel processViewModel);
 
-        Task UpdateProcessAsync(Process process);
+        Task UpdateProcessAsync(ProcessViewModel processViewModel);
 
         Task DeleteProcessAsync(Process process);
     }

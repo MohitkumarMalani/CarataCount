@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CaratCount.Entities;
 
 namespace CaratCount.Models
 {
@@ -8,6 +9,8 @@ namespace CaratCount.Models
         public Guid ClientId { get; set; } = Guid.NewGuid();
         public Guid GstInDetailId { get; set; } = Guid.NewGuid();
         public Guid AddressId { get; set; } = Guid.NewGuid();
+
+        public ICollection<DiamondPacket>? DiamondPackets { get; set; } = null;
 
         [Required(ErrorMessage = "Name is required")]
         public string? Name { get; set; }

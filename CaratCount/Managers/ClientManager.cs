@@ -26,6 +26,7 @@ namespace CaratCount.Managers
             Client? client =  await _context.Clients
                 .Include(c => c.GstInDetail)
                 .ThenInclude(g => g.Address)
+                .Include(c => c.DiamondPackets)
                 .FirstOrDefaultAsync(c => c.Id == clientId && c.UserId == userId);
 
             return client;

@@ -14,7 +14,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <form class="form-inline" asp-controller="@Model.Controller" asp-action="@Model.Action" method="post">
+                <form class="form-inline" asp-controller="@Model.Controller" asp-action="@Model.Action" method="post" asp-route-id="@Model.Id">
                     <input type="hidden" name="id" id="id" value="@Model.Id" />
                     <input type="hidden" name="confirm" value="true" />
                     <button type="submit" class="btn btn-primary">@Model.Action</button>

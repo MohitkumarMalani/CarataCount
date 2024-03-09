@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using CaratCount.Entities;
+﻿using CaratCount.Entities;
 using CaratCount.Interface;
-using CaratCount.Managers;
 using CaratCount.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,13 +11,11 @@ namespace CaratCount.Controllers
     public class ProcessController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmployeeManager _employeeManager;
         private readonly IProcessManager _processManager;
 
-        public ProcessController(UserManager<ApplicationUser> userManager, IEmployeeManager employeeManager, IProcessManager processManager)
+        public ProcessController(UserManager<ApplicationUser> userManager, IProcessManager processManager)
         {
             _userManager = userManager;
-            _employeeManager = employeeManager;
             _processManager = processManager;
         }
 
@@ -56,12 +52,12 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
-            Process? process = new() { UserId = user.Id };
+            ProcessViewModel? processViewModel = new() { UserId = user.Id };
 
 
             ViewBag.PageName = "Process";
             ViewBag.PageAction = "Add";
-            return View("Edit", process);
+            return View("Edit", processViewModel);
         }
 
         // GET: /process/details/{id}
@@ -116,10 +112,23 @@ namespace CaratCount.Controllers
                 return NotFound();
             }
 
+            decimal userCost = process.ProcessPrices?.Reverse()?.FirstOrDefault()?.UserCost ?? 0;
+            decimal clientCharge = process.ProcessPrices?.Reverse().FirstOrDefault()?.ClientCharge ?? 0;
+
+            ProcessViewModel? processViewModel = new()
+            {
+                UserId = user.Id,
+                ProcessId = process.Id,
+                Name = process.Name,
+                Description = process.Description,
+                UserCost = userCost,
+                ClientCharge = clientCharge
+            };
+
             ViewBag.PageName = "Process";
             ViewBag.PageAction = "Edit";
 
-            return View(process);
+            return View(processViewModel);
         }
 
         // GET: /process/delete/{id}
@@ -160,7 +169,7 @@ namespace CaratCount.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(Process process)
+        public async Task<IActionResult> Add(ProcessViewModel processViewModel)
         {
             try
             {
@@ -169,12 +178,12 @@ namespace CaratCount.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    if (user == null || user.Id != process.UserId)
+                    if (user == null || user.Id != processViewModel.UserId)
                     {
                         return NotFound();
                     }
 
-                    await _processManager.AddProcessAsync(process);
+                    await _processManager.AddProcessAsync(processViewModel);
 
                     TempData["ToastMessage"] = "Process added successfully.";
                     TempData["ToastStatus"] = ToastStatus.Success;
@@ -199,7 +208,7 @@ namespace CaratCount.Controllers
 
             ViewBag.PageName = "Process";
             ViewBag.PageAction = "Add";
-            return View("Edit", process);
+            return View("Edit", processViewModel);
 
         }
 
@@ -208,7 +217,7 @@ namespace CaratCount.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, Process process)
+        public async Task<IActionResult> Edit(string id, ProcessViewModel processViewModel)
         {
 
             if (string.IsNullOrEmpty(id))
@@ -226,12 +235,12 @@ namespace CaratCount.Controllers
                 try
                 {
 
-                    if (process.UserId != user.Id)
+                    if (processViewModel.UserId != user.Id)
                     {
                         return NotFound();
                     }
 
-                    await _processManager.UpdateProcessAsync(process);
+                    await _processManager.UpdateProcessAsync(processViewModel);
 
                     TempData["ToastMessage"] = "Process updated successfully.";
                     TempData["ToastStatus"] = ToastStatus.Success;
@@ -246,12 +255,12 @@ namespace CaratCount.Controllers
                     TempData["ToastStatus"] = ToastStatus.Danger;
                     TempData.Keep();
 
-                    return View(process);
+                    return View(processViewModel);
                 }
             }
 
 
-            return View(process);
+            return View(processViewModel);
         }
 
         // POST: /process/delete/{id}

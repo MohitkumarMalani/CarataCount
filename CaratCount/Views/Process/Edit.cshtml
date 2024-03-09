@@ -1,4 +1,4 @@
-﻿@model Process
+﻿@model ProcessViewModel
 
 @{
     ViewData["Title"] = ViewBag?.PageName + " Page";
@@ -19,7 +19,7 @@
             <div class="p-4">
                 <form method="post" asp-controller="Process" asp-action="@ViewBag?.PageAction" class="user">
                     <input type="hidden" asp-for="UserId" />
-                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="ProcessId" />
                     <div class=" mb-4">
 
                         <h5>Process Information</h5>
@@ -33,10 +33,20 @@
                         <span asp-validation-for="Description" class="text-danger"></span>
                         <div class="form-group">
                             <label asp-for="Description">Process Description:</label>
-                            <textarea asp-for="Description" class="form-control form-control-user" placeholder="Enter Description">
-                            </textarea>
+                            <input asp-for="Description" class="form-control form-control-user" placeholder="Enter Description">
                         </div>
 
+                        <span asp-validation-for="UserCost" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="UserCost">User Cost:</label>
+                            <input asp-for="UserCost" class="form-control form-control-user" placeholder="Enter User Cost">
+                        </div>
+
+                        <span asp-validation-for="ClientCharge" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="ClientCharge">Client Charge:</label>
+                            <input asp-for="ClientCharge" class="form-control form-control-user" placeholder="Enter Client Charge">
+                        </div>
                      <button type="submit" class="btn btn-primary btn-user btn-block">Save</button>
                     </div>
                         

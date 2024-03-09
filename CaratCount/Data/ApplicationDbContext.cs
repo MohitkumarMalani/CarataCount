@@ -54,6 +54,7 @@ namespace CaratCount.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<DiamondPacket> DiamondPackets { get; set; }
         public DbSet<Process> Processes { get; set; }
+        public DbSet<ProcessPrice> ProcessPrices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -75,6 +76,9 @@ namespace CaratCount.Data
             .HasKey(e => e.Id);
 
             modelBuilder.Entity<Process>()
+            .HasKey(p => p.Id);
+
+            modelBuilder.Entity<ProcessPrice>()
             .HasKey(p => p.Id);
 
      
@@ -120,11 +124,23 @@ namespace CaratCount.Data
 
             modelBuilder.Entity<DiamondPacket>()
                 .HasOne(d => d.Client)
-                .WithMany(c => c.DiamondPacket)
+                .WithMany(c => c.DiamondPackets)
                 .HasForeignKey(d => d.ClientId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-         
+            modelBuilder.Entity<ProcessPrice>()
+            .HasOne(p => p.Process)
+            .WithMany(p => p.ProcessPrices)
+            .HasForeignKey(p => p.ProcessId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ProcessPrice>()
+               .Property(p => p.UserCost)
+               .HasColumnType("decimal(10,2)"); 
+            modelBuilder.Entity<ProcessPrice>()
+               .Property(p => p.ClientCharge)
+               .HasColumnType("decimal(10,2)");
+           
         }
 
 

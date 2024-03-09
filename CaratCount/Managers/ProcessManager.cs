@@ -1,7 +1,7 @@
 ﻿using CaratCount.Data;
 using CaratCount.Entities;
 using CaratCount.Interface;
-using CaratCount.Migrations;
+using CaratCount.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CaratCount.Managers
@@ -23,28 +23,50 @@ namespace CaratCount.Managers
             if (!Guid.TryParse(id, out processId) || string.IsNullOrEmpty(userId)) return null;
 
             Process? process = await _context.Processes
-                .FirstOrDefaultAsync(p => p.Id == processId && p.UserId == userId);
+               .Include(p => p.ProcessPrices)
+               .Where(p => p.Id == processId && p.UserId == userId)
+               .FirstOrDefaultAsync();
 
+            
             return process;
         }
 
         public async Task<List<Process>?> GetProcessesByUserIdAsync(string userId)
         {
             List<Process> processes = await _context.Processes
-                .Where(p => p.UserId == userId)
-                .ToListAsync();
-
+             .Include(p => p.ProcessPrices)
+             .Where(p => p.UserId == userId)
+             .OrderByDescending(p => p.ProcessPrices.Max(pp => pp.UpdatedAt))
+             .ToListAsync();
 
             return processes;
 
         }
 
-        public async Task AddProcessAsync(Process process)
+        public async Task AddProcessAsync(ProcessViewModel processViewModel)
         {
             try
             {
-                _context.Processes.Add(process);
 
+
+                Process? process = new()
+                {
+                    Name = processViewModel.Name,
+                    Description = processViewModel.Description,
+                    UserId = processViewModel.UserId
+                };
+
+                _context.Processes.Add(process);
+                await _context.SaveChangesAsync();
+
+                ProcessPrice? processPrice = new()
+                {
+                    UserCost = processViewModel.UserCost,
+                    ClientCharge = processViewModel.ClientCharge,
+                    ProcessId = process.Id
+                };
+
+                _context.ProcessPrices.Add(processPrice);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -53,22 +75,41 @@ namespace CaratCount.Managers
             }
         }
 
-        public async Task UpdateProcessAsync(Process process)
+        public async Task UpdateProcessAsync(ProcessViewModel processViewModel)
         {
-            Process? existingProcess = await _context.Processes.FindAsync(process.Id);
+            Process? process = await _context.Processes.Include(p => p.ProcessPrices)
+               .Where(p => p.Id == processViewModel.ProcessId && p.UserId == processViewModel.UserId)
+               .OrderByDescending(p => p.ProcessPrices.Max(pp => pp.UpdatedAt))
+               .FirstOrDefaultAsync();
 
-            if (existingProcess == null)
+            if (process == null)
             {
                 throw new ArgumentException("Process not found.");
             }
 
             try
             {
-                existingProcess.Name = process.Name;
-                existingProcess.Description = process.Description;
+                process.Name = processViewModel.Name;
+                process.Description = processViewModel.Description;
 
-                _context.Processes.Update(existingProcess);
+                _context.Processes.Update(process);
+
+                if (process?.ProcessPrices?.Reverse().FirstOrDefault()?.UserCost != processViewModel.UserCost ||
+                    process?.ProcessPrices?.Reverse().FirstOrDefault()?.ClientCharge != processViewModel.ClientCharge)
+                {
+
+                    ProcessPrice? newProcessPrice = new()
+                    {
+                        UserCost = processViewModel.UserCost,
+                        ClientCharge = processViewModel.ClientCharge,
+                        ProcessId = process.Id
+                    };
+
+                    _context.ProcessPrices.Add(newProcessPrice);
+                }
+
                 await _context.SaveChangesAsync();
+
             }
             catch (Exception ex)
             {

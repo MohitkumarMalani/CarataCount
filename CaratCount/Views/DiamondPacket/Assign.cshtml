@@ -1,0 +1,107 @@
+﻿@model DiamondPacketProcess
+
+@{
+    ViewData["Title"] = ViewBag?.PageName + " Page";
+    List<Employee>? employees = ViewData["Employees"] as List<Employee>;
+    List<Process>? processes = ViewData["Processes"] as List<Process>;
+
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">@ViewBag?.PageAction Diamond Packet</h1>
+        <a asp-action="Index" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="white" height="12" width="12" class="m-1"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" /></svg>
+            Back to Diamond Packets
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-10">
+            <div class="p-4">
+                <form method="post" asp-controller="DiamondPacket" asp-action="@ViewBag?.PageAction" class="user">
+                    
+                        <input  asp-for="Id" value="@Model.Id" type="hidden"/>
+
+                    <div class=" mb-4">
+     
+                        <span asp-validation-for="DiamondPacketId" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="DiamondPacketId">Diamond Packet Id:</label>
+                            <input asp-for="DiamondPacketId" class="form-control form-control-user" readonly />
+                        </div>
+
+                        <hr />
+
+                        <span asp-validation-for="FinalCaratWeight" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="FinalCaratWeight">Final Carat Weight:</label>
+                            <input asp-for="FinalCaratWeight" class="form-control form-control-user" placeholder="Enter Final Carat Weight">
+                        </div>
+
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="Status">Status:</label>
+                            <select asp-for="Status" class="form-control form-control-user">
+                                @foreach (var status in Enum.GetValues(typeof(ProcessStatus)))
+                                {
+                                    <option value="@status">@status</option>
+                                }
+                            </select>
+                        </div>
+
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="StartDate">Start Date:</label>
+                            <input asp-for="StartDate" class="form-control form-control-user" />
+                        </div>
+
+                        <span asp-validation-for="CompleteDate" class="text-danger "></span>
+                        <div class="form-group">
+                            <label asp-for="CompleteDate">Complete Date:</label>
+                            <input asp-for="CompleteDate" class="form-control form-control-user" />
+                        </div>
+
+                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="EmployeeId">Employee:</label>
+                            <select asp-for="EmployeeId" class="form-control form-control-user">
+                                <option value="">Select Employee</option>
+                                @if (employees.Any())
+                                {
+                                    @foreach (var employee in employees)
+                                    {
+                                        <option value="@employee.Id">@employee.Name</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+
+                        <span asp-validation-for="ProcessId" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="ProcessId">Process:</label>
+                            <select asp-for="ProcessId" class="form-control form-control-user">
+                                <option value="">Select Process</option>
+                                @if (processes.Any())
+                                {
+                                    @foreach (var process in processes)
+                                    {
+                                        <option value="@process.Id">@process.Name</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-user btn-block">Save</button>
+                    </div>
+
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+

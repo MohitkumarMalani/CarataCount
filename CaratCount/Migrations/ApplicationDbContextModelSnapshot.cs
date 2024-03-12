@@ -229,6 +229,51 @@ namespace CaratCount.Migrations
                     b.ToTable("DiamondPackets");
                 });
 
+            modelBuilder.Entity("CaratCount.Entities.DiamondPacketProcess", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CompleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DiamondPacketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("FinalCaratWeight")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("ProcessId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProcessPriceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("StartDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiamondPacketId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ProcessId");
+
+                    b.HasIndex("ProcessPriceId");
+
+                    b.ToTable("DiamondPacketProcesses");
+                });
+
             modelBuilder.Entity("CaratCount.Entities.Employee", b =>
                 {
                     b.Property<Guid>("Id")
@@ -524,6 +569,41 @@ namespace CaratCount.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CaratCount.Entities.DiamondPacketProcess", b =>
+                {
+                    b.HasOne("CaratCount.Entities.DiamondPacket", "DiamondPacket")
+                        .WithMany("DiamondPacketProcesses")
+                        .HasForeignKey("DiamondPacketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CaratCount.Entities.Employee", "Employee")
+                        .WithMany("DiamondPacketProcesses")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CaratCount.Entities.Process", "Process")
+                        .WithMany()
+                        .HasForeignKey("ProcessId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CaratCount.Entities.ProcessPrice", "ProcessPrice")
+                        .WithMany()
+                        .HasForeignKey("ProcessPriceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DiamondPacket");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Process");
+
+                    b.Navigation("ProcessPrice");
+                });
+
             modelBuilder.Entity("CaratCount.Entities.Employee", b =>
                 {
                     b.HasOne("CaratCount.Entities.ApplicationUser", "User")
@@ -634,6 +714,16 @@ namespace CaratCount.Migrations
             modelBuilder.Entity("CaratCount.Entities.Client", b =>
                 {
                     b.Navigation("DiamondPackets");
+                });
+
+            modelBuilder.Entity("CaratCount.Entities.DiamondPacket", b =>
+                {
+                    b.Navigation("DiamondPacketProcesses");
+                });
+
+            modelBuilder.Entity("CaratCount.Entities.Employee", b =>
+                {
+                    b.Navigation("DiamondPacketProcesses");
                 });
 
             modelBuilder.Entity("CaratCount.Entities.GstInDetail", b =>

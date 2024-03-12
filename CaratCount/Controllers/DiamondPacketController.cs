@@ -16,12 +16,21 @@ namespace CaratCount.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDiamondPacketManager _diamondPacketManager;
         private readonly IClientManager _clientManager;
+        private readonly IEmployeeManager _employeeManager;
+        private readonly IProcessManager _processManager;
 
-        public DiamondPacketController(UserManager<ApplicationUser> userManager, IDiamondPacketManager diamondPacketManager, IClientManager clientManager)
+        public DiamondPacketController(
+            UserManager<ApplicationUser> userManager,
+            IDiamondPacketManager diamondPacketManager,
+            IClientManager clientManager,
+            IEmployeeManager employeeManager,
+            IProcessManager processManager)
         {
             _userManager = userManager;
             _diamondPacketManager = diamondPacketManager;
             _clientManager = clientManager;
+            _employeeManager = employeeManager;
+            _processManager = processManager;
         }
 
         // GET: /diamond-packet
@@ -89,9 +98,81 @@ namespace CaratCount.Controllers
 
             if (diamondPacket == null) return NotFound();
 
+            List<DiamondPacketProcess?> diamondPacketProcesses = await _diamondPacketManager.GetDiamondPacketProcessesByDiamondPacketIdAsync(diamondPacket.Id.ToString());
+
+            diamondPacket.DiamondPacketProcesses = diamondPacketProcesses;
             ViewBag.PageName = "DiamondPacket";
 
             return View(diamondPacket);
+        }
+
+        // GET: /diamond-packet/assign/{id}
+        [HttpGet("diamond-packet/assign/{id}")]
+        [Authorize]
+        public async Task<IActionResult> Assign(string id)
+        {
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            ApplicationUser? user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            DiamondPacket? diamondPacket = await _diamondPacketManager.GetDiamondPacketByIdAsync(id, user.Id);
+
+            if (diamondPacket == null) return NotFound();
+
+            DiamondPacketProcess diamondPacketProcess = new ()
+            {
+                DiamondPacketId = diamondPacket.Id,
+
+            };
+
+            ViewData["Employees"] = await _employeeManager.GetEmployeesByUserIdAsync(user.Id);
+            ViewData["Processes"] = await _processManager.GetProcessesByUserIdAsync(user.Id);
+
+            ViewBag.PageName = "DiamondPacket";
+            ViewBag.PageAction = "Assign";
+
+            return View("Assign",diamondPacketProcess);
+        }
+
+        // GET: /diamond-packet/assign-edit/{id}
+        [HttpGet("diamond-packet/assign-edit/{id}")]
+        [Authorize]
+        public async Task<IActionResult> AssignEdit(string id)
+        {
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            ApplicationUser? user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            DiamondPacketProcess? diamondPacketProcess = await _diamondPacketManager.GetDiamondPacketProcessByIdAsync(id);
+
+            if (diamondPacketProcess == null) return NotFound();
+
+
+            ViewData["Employees"] = await _employeeManager.GetEmployeesByUserIdAsync(user.Id);
+            ViewData["Processes"] = await _processManager.GetProcessesByUserIdAsync(user.Id);
+
+            ViewBag.PageName = "DiamondPacket";
+            ViewBag.PageAction = "AssignEdit";
+
+            return View("Assign",diamondPacketProcess);
         }
 
         // GET: /diamond-packet/edit/{id}
@@ -211,6 +292,125 @@ namespace CaratCount.Controllers
 
         }
 
+        // POST: /diamond-packet/assign/{id}
+        [HttpPost("diamond-packet/assign/{id}")]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Assign(string id, DiamondPacketProcess diamondPacketProcess)
+        {
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            ApplicationUser? user = await _userManager.GetUserAsync(User);
+
+            ViewData["Employees"] = await _employeeManager.GetEmployeesByUserIdAsync(user.Id);
+            ViewData["Processes"] = await _processManager.GetProcessesByUserIdAsync(user.Id);
+
+            ViewBag.PageName = "DiamondPacket";
+            ViewBag.PageAction = "Assign";
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Process? process = await _processManager.GetProcessByIdAsync(diamondPacketProcess.ProcessId.ToString(), user.Id);
+
+                    if (process == null)
+                    {
+                        TempData["ToastMessage"] = "Invalid process selected.";
+                        TempData["ToastStatus"] = ToastStatus.Danger;
+                        TempData.Keep();
+
+                        return View(diamondPacketProcess);
+                    }
+
+                    Guid processPriceId = process?.ProcessPrices?.Reverse()?.FirstOrDefault()?.Id ?? Guid.Empty;
+                    diamondPacketProcess.ProcessPriceId = processPriceId;
+
+                    await _diamondPacketManager.AssignDiamondPacketProcessAsync(diamondPacketProcess);
+
+                    TempData["ToastMessage"] = "Diamond packet assigned successfully.";
+                    TempData["ToastStatus"] = ToastStatus.Success;
+                    TempData.Keep();
+
+                    return RedirectToAction("Index", "DiamondPacket");
+                }
+                catch 
+                {
+                    TempData["ToastMessage"] = "Something went wrong! Please try again.";
+                    TempData["ToastStatus"] = ToastStatus.Danger;
+                    TempData.Keep();
+
+                    return View(diamondPacketProcess);
+                }
+            }
+
+            return View(diamondPacketProcess);
+
+        }
+
+        // POST: /diamond-packet/assign-edit/{id}
+        [HttpPost("diamond-packet/assign-edit/{id}")]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignEdit(string id, DiamondPacketProcess diamondPacketProcess)
+        {
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            ApplicationUser? user = await _userManager.GetUserAsync(User);
+
+            ViewData["Employees"] = await _employeeManager.GetEmployeesByUserIdAsync(user.Id);
+            ViewData["Processes"] = await _processManager.GetProcessesByUserIdAsync(user.Id);
+
+            ViewBag.PageName = "DiamondPacket";
+            ViewBag.PageAction = "AssignEdit";
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Process? process = await _processManager.GetProcessByIdAsync(diamondPacketProcess.ProcessId.ToString(), user.Id);
+
+                    if (process == null)
+                    {
+                        TempData["ToastMessage"] = "Invalid process selected.";
+                        TempData["ToastStatus"] = ToastStatus.Danger;
+                        TempData.Keep();
+
+                        return View(diamondPacketProcess);
+                    }
+
+                    Guid processPriceId = process?.ProcessPrices?.Reverse()?.FirstOrDefault()?.Id ?? Guid.Empty;
+                    diamondPacketProcess.ProcessPriceId = processPriceId;
+
+                    await _diamondPacketManager.UpdateDiamondPacketProcessAsync(diamondPacketProcess);
+
+                    TempData["ToastMessage"] = "Diamond packet assigned successfully.";
+                    TempData["ToastStatus"] = ToastStatus.Success;
+                    TempData.Keep();
+
+                    return RedirectToAction("Index", "DiamondPacket");
+                }
+                catch 
+                {
+                    TempData["ToastMessage"] = "Something went wrong! Please try again.";
+                    TempData["ToastStatus"] = ToastStatus.Danger;
+                    TempData.Keep();
+
+                    return View("Assign",diamondPacketProcess);
+                }
+            }
+
+
+            return View("Assign",diamondPacketProcess);
+        }
 
         // POST: /diamond-packet/edit/{id}
         [HttpPost("diamond-packet/edit/{id}")]

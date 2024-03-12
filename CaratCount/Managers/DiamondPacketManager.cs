@@ -25,11 +25,42 @@ namespace CaratCount.Managers
 
             DiamondPacket? diamondPacket = await _context.DiamondPackets
                 .Include(d => d.Client)
+                .Include(dp => dp.DiamondPacketProcesses)
                 .FirstOrDefaultAsync(d => d.Id == diamondPacketId && d.UserId == userId);
 
             return diamondPacket;
         }
 
+        public async Task<DiamondPacketProcess> GetDiamondPacketProcessByIdAsync(string id)
+        {
+            Guid diamondPacketProcessId;
+
+            if (!Guid.TryParse(id, out diamondPacketProcessId)) return null;
+
+            DiamondPacketProcess diamondPacketProcess   = await _context.DiamondPacketProcesses
+                        .Include(dpp => dpp.Employee)
+                .Include(dpp => dpp.Process)
+                .Include(dpp => dpp.ProcessPrice)
+                .FirstOrDefaultAsync(dpp => dpp.Id == diamondPacketProcessId);
+
+            return diamondPacketProcess;
+        }
+
+        public async Task<List<DiamondPacketProcess>?> GetDiamondPacketProcessesByDiamondPacketIdAsync(string id)
+        {
+            Guid diamondPacketId;
+
+            if (!Guid.TryParse(id, out diamondPacketId)) return null;
+
+            List<DiamondPacketProcess> diamondPacketProcesses = await _context.DiamondPacketProcesses
+                        .Include(dpp => dpp.Employee)
+                .Include(dpp => dpp.Process)
+                .Include(dpp => dpp.ProcessPrice)
+                .Where(dpp => dpp.DiamondPacketId == diamondPacketId)
+                .ToListAsync();
+
+            return diamondPacketProcesses;
+        }
         public async Task<List<DiamondPacket>?> GetDiamondPacketsByUserIdAsync(string userId)
         {
             List<DiamondPacket> diamondPackets = await _context.DiamondPackets
@@ -103,5 +134,42 @@ namespace CaratCount.Managers
                 throw ex;
             }
         }
+
+        public async Task AssignDiamondPacketProcessAsync(DiamondPacketProcess diamondPacketProcess)
+        {
+            try
+            {
+                if (diamondPacketProcess == null)
+                {
+                    throw new ArgumentNullException(nameof(diamondPacketProcess));
+                }
+
+                _context.DiamondPacketProcesses.Add(diamondPacketProcess);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task UpdateDiamondPacketProcessAsync(DiamondPacketProcess diamondPacketProcess)
+        {
+            try
+            {
+                if (diamondPacketProcess == null)
+                {
+                    throw new ArgumentNullException(nameof(diamondPacketProcess));
+                }
+
+                _context.DiamondPacketProcesses.Update(diamondPacketProcess);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

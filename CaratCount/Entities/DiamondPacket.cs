@@ -84,7 +84,9 @@ namespace CaratCount.Entities
         public string? UserId { get; set; }
         public Client? Client { get; set; }
         public ApplicationUser? User { get; set; }
+        public ICollection<DiamondPacketProcess>? DiamondPacketProcesses { get; set; }
+
 
     }
-    
+
 }

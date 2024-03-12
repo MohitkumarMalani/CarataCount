@@ -55,6 +55,7 @@ namespace CaratCount.Data
         public DbSet<DiamondPacket> DiamondPackets { get; set; }
         public DbSet<Process> Processes { get; set; }
         public DbSet<ProcessPrice> ProcessPrices { get; set; }
+        public DbSet<DiamondPacketProcess> DiamondPacketProcesses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,7 +71,7 @@ namespace CaratCount.Data
             .HasKey(a => a.Id);
 
             modelBuilder.Entity<DiamondPacket>()
-            .HasKey(d => d.Id);
+            .HasKey(dp => dp.Id);
 
             modelBuilder.Entity<Employee>()
             .HasKey(e => e.Id);
@@ -79,7 +80,10 @@ namespace CaratCount.Data
             .HasKey(p => p.Id);
 
             modelBuilder.Entity<ProcessPrice>()
-            .HasKey(p => p.Id);
+            .HasKey(pp => pp.Id);  
+            
+            modelBuilder.Entity<DiamondPacketProcess>()
+            .HasKey(dpp => dpp.Id);
 
      
             modelBuilder.Entity<ApplicationUser>()
@@ -119,13 +123,13 @@ namespace CaratCount.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<DiamondPacket>()
-                .Property(d => d.CaratWeight)
+                .Property(dp => dp.CaratWeight)
                 .HasColumnType("decimal(10,2)");
 
             modelBuilder.Entity<DiamondPacket>()
-                .HasOne(d => d.Client)
+                .HasOne(dp => dp.Client)
                 .WithMany(c => c.DiamondPackets)
-                .HasForeignKey(d => d.ClientId)
+                .HasForeignKey(dp => dp.ClientId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ProcessPrice>()
@@ -137,10 +141,39 @@ namespace CaratCount.Data
             modelBuilder.Entity<ProcessPrice>()
                .Property(p => p.UserCost)
                .HasColumnType("decimal(10,2)"); 
+
             modelBuilder.Entity<ProcessPrice>()
                .Property(p => p.ClientCharge)
                .HasColumnType("decimal(10,2)");
-           
+
+            modelBuilder.Entity<DiamondPacket>()
+              .HasMany(dp => dp.DiamondPacketProcesses)
+              .WithOne(dpp => dpp.DiamondPacket)
+              .HasForeignKey(dpp => dpp.DiamondPacketId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Employee>()
+              .HasMany(e => e.DiamondPacketProcesses)
+              .WithOne(dpp => dpp.Employee)
+              .HasForeignKey(dpp => dpp.EmployeeId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<DiamondPacketProcess>()
+               .HasOne(dpp => dpp.Process)
+               .WithMany() 
+               .HasForeignKey(dp => dp.ProcessId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<DiamondPacketProcess>()
+              .HasOne(dpp => dpp.ProcessPrice)
+              .WithMany()
+              .HasForeignKey(dpp => dpp.ProcessPriceId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<DiamondPacketProcess>()
+               .Property(dpp => dpp.FinalCaratWeight)
+               .HasColumnType("decimal(10,2)");
+
         }
 
 

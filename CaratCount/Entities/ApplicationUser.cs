@@ -22,6 +22,7 @@ namespace CaratCount.Entities
         public ICollection<Client>? Clients { get; set; }
         public ICollection<Employee>? Employees { get; set; }
         public ICollection<Process>? Processes { get; set; }
+        public ICollection<Invoice>? Invoices { get; set; }
 
     }
 }

@@ -1,8 +1,6 @@
 ﻿using CaratCount.Data;
 using CaratCount.Entities;
 using CaratCount.Interface;
-using CaratCount.Migrations;
-using CaratCount.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CaratCount.Managers
@@ -37,7 +35,7 @@ namespace CaratCount.Managers
 
             if (!Guid.TryParse(id, out diamondPacketProcessId)) return null;
 
-            DiamondPacketProcess diamondPacketProcess   = await _context.DiamondPacketProcesses
+            DiamondPacketProcess diamondPacketProcess = await _context.DiamondPacketProcesses
                         .Include(dpp => dpp.Employee)
                 .Include(dpp => dpp.Process)
                 .Include(dpp => dpp.ProcessPrice)
@@ -61,11 +59,39 @@ namespace CaratCount.Managers
 
             return diamondPacketProcesses;
         }
+        public async Task<List<DiamondPacketProcess>?> GetDiamondPacketProcessesByEmployeeByIdAsync(string id)
+        {
+            Guid employeeId;
+
+            if (!Guid.TryParse(id, out employeeId)) return null;
+
+            List<DiamondPacketProcess> diamondPacketProcesses = await _context.DiamondPacketProcesses
+                        .Include(dpp => dpp.Employee)
+                .Include(dpp => dpp.Process)
+                .Include(dpp => dpp.ProcessPrice)
+                .Where(dpp => dpp.EmployeeId == employeeId)
+                .ToListAsync();
+
+            return diamondPacketProcesses;
+        }
         public async Task<List<DiamondPacket>?> GetDiamondPacketsByUserIdAsync(string userId)
         {
             List<DiamondPacket> diamondPackets = await _context.DiamondPackets
                 .Include(d => d.Client)
                 .Where(d => d.UserId == userId)
+                .ToListAsync();
+
+            return diamondPackets;
+        }
+
+        public async Task<List<DiamondPacket>?> GetDiamondPacketsByClientIdAsync(string id)
+        {
+            Guid clientId;
+
+            if (!Guid.TryParse(id, out clientId)) return null;
+
+            List<DiamondPacket> diamondPackets = await _context.DiamondPackets
+                .Where(d => d.ClientId == clientId)
                 .ToListAsync();
 
             return diamondPackets;

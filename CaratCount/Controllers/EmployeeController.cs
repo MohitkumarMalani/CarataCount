@@ -1,6 +1,7 @@
 ﻿using CaratCount.Entities;
 using CaratCount.Interface;
 using CaratCount.Managers;
+using CaratCount.Migrations;
 using CaratCount.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +13,16 @@ namespace CaratCount.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmployeeManager _employeeManager;
+        private readonly IDiamondPacketManager _diamondPacketManager;
 
-        public EmployeeController(UserManager<ApplicationUser> userManager, IEmployeeManager employeeManager)
+        public EmployeeController(
+            UserManager<ApplicationUser> userManager,
+            IEmployeeManager employeeManager,
+            IDiamondPacketManager diamondPacketManager)
         {
             _userManager = userManager;
             _employeeManager = employeeManager;
+            _diamondPacketManager = diamondPacketManager;
         }
 
         // GET: /employee
@@ -81,6 +87,10 @@ namespace CaratCount.Controllers
             Employee? employee = await _employeeManager.GetEmployeeByIdAsync(id, user.Id);
 
             if (employee == null) return NotFound();
+
+            List<DiamondPacketProcess?> diamondPacketProcesses = await _diamondPacketManager.GetDiamondPacketProcessesByEmployeeByIdAsync(employee.Id.ToString());
+
+            employee.DiamondPacketProcesses = diamondPacketProcesses;
 
             ViewBag.PageName = "Employee";
 

@@ -53,6 +53,10 @@
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
     },
     {
+      "Id": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-multiselect.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-multiselect.css"
+    },
+    {
       "Id": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
     },
@@ -147,6 +151,10 @@
     {
       "Id": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap-multiselect.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap-multiselect.js"
     },
     {
       "Id": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",

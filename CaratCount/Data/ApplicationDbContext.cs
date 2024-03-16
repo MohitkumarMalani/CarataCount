@@ -56,6 +56,8 @@ namespace CaratCount.Data
         public DbSet<Process> Processes { get; set; }
         public DbSet<ProcessPrice> ProcessPrices { get; set; }
         public DbSet<DiamondPacketProcess> DiamondPacketProcesses { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -83,7 +85,13 @@ namespace CaratCount.Data
             .HasKey(pp => pp.Id);  
             
             modelBuilder.Entity<DiamondPacketProcess>()
-            .HasKey(dpp => dpp.Id);
+            .HasKey(dpp => dpp.Id);     
+            
+            modelBuilder.Entity<Invoice>()
+            .HasKey(i => i.Id);
+
+          modelBuilder.Entity<InvoiceItem>()
+            .HasKey(i => i.Id);
 
      
             modelBuilder.Entity<ApplicationUser>()
@@ -108,12 +116,24 @@ namespace CaratCount.Data
                 .HasMany(u => u.Processes)
                 .WithOne(p => p.User)
                 .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);   
+            
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Invoices)
+                .WithOne(i => i.User)
+                .HasForeignKey(i => i.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Client>()
                 .HasOne(c => c.GstInDetail)
                 .WithOne(g => g.Client)
                 .HasForeignKey<Client>(c => c.GstInDetailId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Client>()
+                .HasMany(c => c.Invoices)
+                .WithOne(i => i.Client)
+                .HasForeignKey(i => i.ClientId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GstInDetail>()
@@ -173,6 +193,18 @@ namespace CaratCount.Data
             modelBuilder.Entity<DiamondPacketProcess>()
                .Property(dpp => dpp.FinalCaratWeight)
                .HasColumnType("decimal(10,2)");
+
+            modelBuilder.Entity<Invoice>()
+               .HasMany(i => i.InvoiceItems)
+               .WithOne(i => i.Invoice)
+               .HasForeignKey(i => i.InvoiceId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<InvoiceItem>()
+               .HasOne(i => i.DiamondPacket)
+               .WithOne()
+               .HasForeignKey<InvoiceItem>(i => i.DiamondPacketId)
+               .OnDelete(DeleteBehavior.NoAction);
 
         }
 

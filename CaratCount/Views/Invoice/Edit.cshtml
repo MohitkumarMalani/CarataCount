@@ -1,0 +1,142 @@
+﻿@model InvoiceViewModel
+
+@{
+    ViewData["Title"] = ViewBag?.PageName + " Page";
+
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">@ViewBag?.PageAction Invoice Information</h1>
+        <a asp-action="Index" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="white" height="12" width="12" class="m-1"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" /></svg>
+            Back to Invoice
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-10">
+            <div class="p-4">
+                <form method="post" asp-controller="Invoice" asp-action="@ViewBag?.PageAction" class="user">
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="InvoiceId" />
+                    <div class=" mb-4">
+
+                        <h5>Invoice Information</h5>
+                        <hr />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="Description">Invoice Description:</label>
+                            <textarea asp-for="Description" class="form-control form-control-user" placeholder="Enter Description">
+                                </textarea>
+                        </div>
+
+                        <span asp-validation-for="PaymentStatus" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="PaymentStatus">Payment Status:</label>
+                            <select asp-for="PaymentStatus" class="form-control form-control-user">
+                                @foreach (var status in Enum.GetValues(typeof(InvoiceStatus)))
+                                {
+                                    <option value="@status">@status</option>
+                                }
+                            </select>
+                        </div>
+
+                        <span asp-validation-for="IssueDate" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="IssueDate">Issue Date:</label>
+                            <input asp-for="IssueDate" class="form-control form-control-user" />
+                        </div>
+
+                        <span asp-validation-for="DueDate" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="DueDate">Due Date:</label>
+                            <input asp-for="DueDate" class="form-control form-control-user" />
+                        </div>
+
+                        @if (@ViewBag?.PageAction == "Edit")
+                        {
+
+                            <input type="hidden" asp-for="ClientId" />
+                        }
+                        else {
+
+                        <span asp-validation-for="ClientId" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="ClientId">Client:</label>
+                            <select asp-for="ClientId" class="form-control form-control-user">
+                                @if (Model.Clients.Any())
+                                {
+                                    @foreach (var client in Model.Clients)
+                                    {
+                                        <option value="@client.Id">@client.Name</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+
+                            <div class="form-group">
+                                <label asp-for="DiamondPackets">DiamondPackets:</label>
+
+                                @Html.ListBoxFor(i => Model.DiamondPacketIds, Model.DiamondPackets,
+                            new { @class = "form-control form-control-user", id = "DiamondPacketDropdown" })
+
+                            </div>
+                        }
+
+                       
+
+                        <button type="submit" class="btn btn-primary btn-user btn-block">Save</button>
+                    </div>
+
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function getDiamondPacketsByClientId() {
+        var clientId = document.getElementById("ClientId").value;
+
+        if (clientId) {
+            fetch('/invoice/get-diamond-packets?clientId=' + clientId)
+                .then(response => response.json())
+                .then(data => {
+                    var diamondPacketSelect = document.getElementById("DiamondPacketDropdown");
+                    diamondPacketSelect.disabled = false;
+                    diamondPacketSelect.innerHTML = ""; // Clear existing options
+
+                    if (data.length == 0) {
+                        diamondPacketSelect.disabled = true;
+                        diamondPacketSelect.innerHTML = "<option>-- No Diamond Packet available --</option>";
+                    }else
+                    data.forEach(packet => {
+                        var option = document.createElement("option");
+                        option.value = packet.Id; 
+                        option.text = packet.Id; 
+                        diamondPacketSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error(error));
+        } else {
+            var diamondPacketSelect = document.getElementById("DiamondPacketDropdown");
+            diamondPacketSelect.disabled = true;
+            diamondPacketSelect.innerHTML = "<option>-- Select Diamond Packet --</option>";
+        }
+    }
+        document.addEventListener("DOMContentLoaded", function () {
+            var clientIdSelect = document.getElementById("ClientId");
+
+            getDiamondPacketsByClientId();
+
+            clientIdSelect.addEventListener("change", function () {
+                getDiamondPacketsByClientId(this.value);
+            });
+        });
+    
+</script>

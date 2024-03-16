@@ -6,9 +6,10 @@ namespace CaratCount.Interface
     {
         Task<DiamondPacket?> GetDiamondPacketByIdAsync(string id, string userId);
         Task<DiamondPacketProcess> GetDiamondPacketProcessByIdAsync(string id);
-
         Task<List<DiamondPacket>?> GetDiamondPacketsByUserIdAsync(string userId);
+        Task<List<DiamondPacket>?> GetDiamondPacketsByClientIdAsync(string id);
         Task<List<DiamondPacketProcess>?> GetDiamondPacketProcessesByDiamondPacketIdAsync(string id);
+        Task<List<DiamondPacketProcess>?> GetDiamondPacketProcessesByEmployeeByIdAsync(string id);
 
         Task AddDiamondPacketAsync(DiamondPacket diamondPacket);
 

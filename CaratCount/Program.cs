@@ -14,6 +14,7 @@ builder.Services.AddScoped<IClientManager, ClientManager>();
 builder.Services.AddScoped<IDiamondPacketManager, DiamondPacketManager>();
 builder.Services.AddScoped<IEmployeeManager, EmployeeManager>();
 builder.Services.AddScoped<IProcessManager, ProcessManager>();
+builder.Services.AddScoped<IInvoiceManager, InvoiceManager>();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 string connStr = builder.Configuration.GetConnectionString("DefaultConnection");

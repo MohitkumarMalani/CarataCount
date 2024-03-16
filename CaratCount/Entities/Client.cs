@@ -23,5 +23,7 @@ namespace CaratCount.Entities
         public GstInDetail? GstInDetail { get; set; }
 
         public ICollection<DiamondPacket>? DiamondPackets { get; set; }
+        public ICollection<Invoice>? Invoices { get; set; }
+
     }
 }

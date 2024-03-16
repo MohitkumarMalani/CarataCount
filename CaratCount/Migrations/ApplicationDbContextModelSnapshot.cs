@@ -238,11 +238,11 @@ namespace CaratCount.Migrations
                     b.Property<DateTime?>("CompleteDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DiamondPacketId")
+                    b.Property<Guid?>("DiamondPacketId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("EmployeeId")
-                        .IsRequired()
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("FinalCaratWeight")
@@ -332,6 +332,73 @@ namespace CaratCount.Migrations
                         .IsUnique();
 
                     b.ToTable("GstInDetails");
+                });
+
+            modelBuilder.Entity("CaratCount.Entities.Invoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DueDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("IssueDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Invoices");
+                });
+
+            modelBuilder.Entity("CaratCount.Entities.InvoiceItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("ClientCharge")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("DiamondPacketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("InvoiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("UserCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiamondPacketId")
+                        .IsUnique();
+
+                    b.HasIndex("InvoiceId");
+
+                    b.ToTable("InvoiceItems");
                 });
 
             modelBuilder.Entity("CaratCount.Entities.Process", b =>
@@ -625,6 +692,43 @@ namespace CaratCount.Migrations
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("CaratCount.Entities.Invoice", b =>
+                {
+                    b.HasOne("CaratCount.Entities.Client", "Client")
+                        .WithMany("Invoices")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CaratCount.Entities.ApplicationUser", "User")
+                        .WithMany("Invoices")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Client");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CaratCount.Entities.InvoiceItem", b =>
+                {
+                    b.HasOne("CaratCount.Entities.DiamondPacket", "DiamondPacket")
+                        .WithOne()
+                        .HasForeignKey("CaratCount.Entities.InvoiceItem", "DiamondPacketId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CaratCount.Entities.Invoice", "Invoice")
+                        .WithMany("InvoiceItems")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DiamondPacket");
+
+                    b.Navigation("Invoice");
+                });
+
             modelBuilder.Entity("CaratCount.Entities.Process", b =>
                 {
                     b.HasOne("CaratCount.Entities.ApplicationUser", "User")
@@ -708,12 +812,16 @@ namespace CaratCount.Migrations
 
                     b.Navigation("Employees");
 
+                    b.Navigation("Invoices");
+
                     b.Navigation("Processes");
                 });
 
             modelBuilder.Entity("CaratCount.Entities.Client", b =>
                 {
                     b.Navigation("DiamondPackets");
+
+                    b.Navigation("Invoices");
                 });
 
             modelBuilder.Entity("CaratCount.Entities.DiamondPacket", b =>
@@ -731,6 +839,11 @@ namespace CaratCount.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CaratCount.Entities.Invoice", b =>
+                {
+                    b.Navigation("InvoiceItems");
                 });
 
             modelBuilder.Entity("CaratCount.Entities.Process", b =>

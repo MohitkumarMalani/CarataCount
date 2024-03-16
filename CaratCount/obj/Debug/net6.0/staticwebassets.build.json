@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "eqiVagmSjwfHH5uAvWb14bhhZ6nsSDnY582Oi9vOqJk=",
+  "Hash": "tqVrc7JfQkRW1pUG98Vc4m3Iehk0IQO5C0ArTtXF/VM=",
   "Source": "CaratCount",
   "BasePath": "_content/CaratCount",
   "Mode": "Default",
@@ -372,6 +372,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Identity": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-multiselect.css",
+      "SourceId": "CaratCount",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\",
+      "BasePath": "_content/CaratCount",
+      "RelativePath": "lib/bootstrap/dist/css/bootstrap-multiselect.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-multiselect.css"
     },
     {
       "Identity": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
@@ -848,6 +865,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Identity": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap-multiselect.js",
+      "SourceId": "CaratCount",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\",
+      "BasePath": "_content/CaratCount",
+      "RelativePath": "lib/bootstrap/dist/js/bootstrap-multiselect.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap-multiselect.js"
     },
     {
       "Identity": "C:\\Users\\91886\\source\\repos\\CaratCount\\CaratCount\\wwwroot\\lib\\bootstrap\\LICENSE",

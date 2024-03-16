@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CaratCount.Migrations;
 
 namespace CaratCount.Entities
 {
@@ -22,7 +21,7 @@ namespace CaratCount.Entities
 
         [Required(ErrorMessage = "City is required")]
         public string? City { get; set; }
-                                                                        
+
         [Required(ErrorMessage = "District is required")]
         public string? District { get; set; }
 
@@ -36,6 +35,14 @@ namespace CaratCount.Entities
         [RegularExpression(@"^\d{6}$", ErrorMessage = "PostalCode must be a six-digit number.")]
         public string? PostalCode { get; set; }
 
-        public GstInDetail? GstInDetail { get; set; }
+        public GstInDetail? GstInDetail
+        {
+            get; set;
+        }
+
+        public string CombineAddressFields()
+        {
+            return $"{BuildingName}, {StreetName}, \n{FloorNumber}, {UnitNumber}, \n{Locality}, {City}, \n{District}, {State}, \n{Country} - {PostalCode}";
+        }
     }
 }

@@ -56,6 +56,9 @@ For support or assistance, please contact mmalani9749@conestogac.on.ca or submit
 ## License
 This project is licensed under the [MIT License](LICENSE).
 
+### Why MIT License?
+We chose the MIT License because it is a permissive license that allows users to freely use, modify, and distribute the project's code, even for commercial purposes, with minimal restrictions. We believe in fostering collaboration and open sharing of knowledge, and the MIT License aligns with our project's goals of encouraging community contributions and innovation.
+
 ## Acknowledgements
 - Thank you to the .NET Core, Entity Framework Core, and ASP.NET Core communities for providing excellent tools and resources.
 - Special thanks to Tulsi Patel and Jenish Patel  for their contributions to the project.
